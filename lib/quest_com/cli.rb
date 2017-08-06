@@ -1,0 +1,4 @@
+class QuestCom::CLI
+
+
+end

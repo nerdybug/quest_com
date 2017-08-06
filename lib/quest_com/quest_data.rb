@@ -1,0 +1,4 @@
+class QuestCom::QuestData
+
+
+end
