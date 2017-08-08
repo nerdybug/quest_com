@@ -5,13 +5,13 @@ class QuestCom::Scraper
     @user_input = user_input
     prepared_input = prepare_input_for_search(user_input)
     parse_quest_id(search_for_result_body(prepared_input))
+    # should move these calls to CLI?
   end
 
   def prepare_input_for_search(input)
     # does not yet handle anything with PUNCTUATION
-    wordsToRemove = %w(and of the with) # array for words that are irrelevant to the search
-    removeRegex = Regexp.union(wordsToRemove) # prapares the array for regex ex
-    # => /and|of|the|with/
+    remove = %w(and of the with : . , ' ! ?) # array of items that are irrelevant to the search - may need to add
+    removeRegex = Regexp.union(remove) # prapares the array for regex, example: /and|of|the|with/
     result = input.downcase
     result = result.gsub(removeRegex, '').squeeze(" ") # handle any extraneous spaces
   end
@@ -27,11 +27,21 @@ class QuestCom::Scraper
   end
 
   def parse_quest_id(result_body)
+    find_my_id = nil
     parsedArray = Array(eval(result_body))
     names = parsedArray[1] # need to look here for "(Quest)" to be included
     # sample data for above: ["Imp-Binding Contract (Item)", "A Binding Contract (Quest)"]
     # binding.pry
-
+    potential_matches = names.select {|name| name.include? "(Quest)"}
+    # binding.pry
+    if potential_matches.length == 1
+      find_my_id = names.index("#{potential_matches[0]}")
+      puts "The index for the quest is #{find_my_id}" # only here for testing at the moment
+      quest_id = parsedArray[7][find_my_id.to_i][1]
+      puts "The quest ID is #{quest_id}" # only here for testing at the moment
+    else
+      puts "There is no match. Please try your query on wowhead.com" # temporary
+    end
+    # need to create QuestData object once we have the right ID and give it that property
   end
-
 end
