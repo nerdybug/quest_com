@@ -14,10 +14,10 @@ class QuestCom::CLI
 
   def get_quest_name(user_input)
     quest_name = user_input
-    puts "You have searched for #{quest_name}" # for testing while building at the moment
+    puts "You have searched for #{quest_name}" # only here for testing at the moment
   end
 
-  def scrape_for_id(user_input)
+  def scrape_for_id(user_input) # in progress
     scraper = QuestCom::Scraper.new(user_input)
     scraper.scrape_to_create_quest_object
   end
