@@ -1,10 +1,10 @@
 class QuestCom::QuestData
   attr_reader :quest_id
 
-  def initialize(quest_id, page_data)
+  def initialize(quest_id, comments_data)
     # takes in a scraped quest's information (result_body, quest_id)
     @quest_id = quest_id
-    @data = page_data
+    @comments_data = comments_data
     puts "Hello, I am the Quest! My ID is #{@quest_id}." # only here for testing at the moment
     # binding.pry
   end
