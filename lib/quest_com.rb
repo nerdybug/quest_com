@@ -4,11 +4,10 @@ require './lib/quest_com/scraper'
 require './lib/quest_com/quest_data'
 
 require 'pry'
-require 'nokogiri'
-require 'open-uri'
 require 'net/http'
 require 'uri'
-
+require 'json'
+require 'ostruct'
 # module QuestCom
 #   # Your code goes here...
 # end
