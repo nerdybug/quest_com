@@ -5,7 +5,7 @@ class QuestCom::CLI
     input = gets.strip
     get_quest_name(input)
     scrape_for_id(input)
-    # not yet gotten to collecting comments, displaying them or other options
+    # not yet gotten to displaying comments or other options
   end
 
   def greet
@@ -19,7 +19,8 @@ class QuestCom::CLI
 
   def scrape_for_id(user_input) # in progress
     scraper = QuestCom::Scraper.new(user_input)
-    scraper.scrape_to_create_quest_object
+    quest = scraper.scrape_to_create_quest_object
+    quest.top_comment
   end
 
 end
