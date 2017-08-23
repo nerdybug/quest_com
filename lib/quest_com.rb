@@ -7,7 +7,6 @@ require 'pry'
 require 'net/http'
 require 'uri'
 require 'json'
-require 'ostruct'
 # module QuestCom
 #   # Your code goes here...
 # end
