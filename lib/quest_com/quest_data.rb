@@ -10,7 +10,6 @@ class QuestCom::QuestData
 
   def all_comments
     # temporary
-
   end
 
   def top_comment
