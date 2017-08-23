@@ -43,9 +43,9 @@ class QuestCom::Scraper
   end
 
   def convert_to_json(javascript)
-    # change ' to " to prepare for JSON conversion as proper JSON uses "
+    # change ' to " to prepare for JSON conversion
     result = javascript.gsub("'", '"')
-    # add double quotes around the keys, necessary for propar JSON
+    # add double quotes around the keys
     result_is_ready = result.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
     result_is_ready
   end
@@ -53,13 +53,13 @@ class QuestCom::Scraper
   def find_comments_on_quest_page(quest_id)
     url = URI.parse("http://www.wowhead.com/quest=#{quest_id}/")
     result_body = hit_this_url(url)
-    # to find the hash of comment date, we look for a match of the variable name lv_comments0
+    # to find the hash of comment data, we look for a match of var lv_comments0
     match = /var\s+lv_comments0\s+=\s+(\[.+\]);/.match(result_body)
     # the info at index 1 of the match has all the comment data as javascript
     javascript = match[1]
     parsable_json = convert_to_json(javascript)
-    lets_see = JSON.parse(parsable_json) # this gives an array of hashes in tidy JSON
-    # binding.pry
+    comment_hash_array = JSON.parse(parsable_json) # this gives an array of hashes in tidy JSON
+
   end
 
   def scrape_to_create_quest_object
@@ -72,15 +72,5 @@ class QuestCom::Scraper
     # comments_data = parse_quest_comments_data(raw_page_data)
     QuestCom::QuestData.new(quest_id, comment_hash_array)
   end
-
-  # def testing_ostruct_for_comments(comment_hash_array)
-  #   comments = []
-  #   comment_hash_array.each do |comment_hash|
-  #    comments << OpenStruct.new(comment_hash)
-  #   end
-  #   comments # this gives me an array of OpenStruct comment objects
-  #   # binding.pry
-  # end
-
 
 end
