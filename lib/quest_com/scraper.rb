@@ -68,19 +68,19 @@ class QuestCom::Scraper
     quest_id = parse_quest_id(search_for_result_body(prepared_input))
     sleep 5
     comment_hash_array = find_comments_on_quest_page(quest_id)
-    comments = testing_ostruct_for_comments(comment_hash_array)
+    # comments = testing_ostruct_for_comments(comment_hash_array)
     # comments_data = parse_quest_comments_data(raw_page_data)
-    QuestCom::QuestData.new(quest_id, comments)
+    QuestCom::QuestData.new(quest_id, comment_hash_array)
   end
 
-  def testing_ostruct_for_comments(comment_hash_array)
-    comments = []
-    comment_hash_array.each do |comment_hash|
-     comments << OpenStruct.new(comment_hash)
-    end
-    comments # this gives me an array of OpenStruct comment objects
-    # binding.pry
-  end
+  # def testing_ostruct_for_comments(comment_hash_array)
+  #   comments = []
+  #   comment_hash_array.each do |comment_hash|
+  #    comments << OpenStruct.new(comment_hash)
+  #   end
+  #   comments # this gives me an array of OpenStruct comment objects
+  #   # binding.pry
+  # end
 
 
 end
