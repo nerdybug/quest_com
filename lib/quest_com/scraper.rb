@@ -11,14 +11,13 @@ class QuestCom::Scraper
     result = result.gsub(removeRegex, '').squeeze(" ") # handle any extraneous spaces
   end
 
-  def hit_this_url(url) # this action was repeated in two methods, needed extraction
+  def hit_this_url(url)
     request = Net::HTTP::Get.new(url.to_s)
     result = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
     result_body = result.body
   end
 
-  def search_for_result_body(prepared_input) # may change to #find_result_of_name_search
-    # utilize URI to hit a url and gather the response
+  def search_for_result_body(prepared_input)
     query = URI.escape(prepared_input) # => a%20binding%20contract
     url = URI.parse("http://www.wowhead.com/search?q=#{query}&opensearch")
     result_body = hit_this_url(url)
@@ -31,9 +30,7 @@ class QuestCom::Scraper
 
     if potential_matches.length == 1
       find_my_id = names.index("#{potential_matches[0]}").to_i
-      # puts "The index for the quest is #{find_my_id}" # only here for testing at the moment
       quest_id = parsedArray[7][find_my_id][1]
-      # puts "The quest ID is #{quest_id}" # only here for testing at the moment
       quest_id
     else
       puts "There is no match. Please try your query on wowhead.com" # temporary message
@@ -68,8 +65,6 @@ class QuestCom::Scraper
     quest_id = parse_quest_id(search_for_result_body(prepared_input))
     sleep 5
     comment_hash_array = find_comments_on_quest_page(quest_id)
-    # comments = testing_ostruct_for_comments(comment_hash_array)
-    # comments_data = parse_quest_comments_data(raw_page_data)
     QuestCom::QuestData.new(quest_id, comment_hash_array)
   end
 
