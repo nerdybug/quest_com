@@ -1,5 +1,5 @@
 class QuestCom::QuestData
-  attr_reader :quest_id, :top_comment
+  attr_reader :quest_id, :top_comment, :all_comments
 
   def initialize(quest_id, comment_hash_array)
     @quest_id = quest_id
