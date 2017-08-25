@@ -1,10 +1,9 @@
 class QuestCom::Comment
   attr_accessor :commentv2, :number, :id, :nreplies, :sticky, :user, :body, :date,
   :rating, :indent, :roles, :deleted, :outofdate, :userRating, :replies, :lastEdit
-# of particular importance are: number, nreplies, sticky, user, body, date, rating
+# of particular importance are: number, nreplies, user, body, date, rating
 # number is the numeral for its position on the page starting at 0
 # nreplies is how many replies the comment has
-# sticky is if a moderator flagged the comment as important - need to double-check this
 # user is the wowhead user's name who posted the comment
 # body is the content of the comment itself - needs review for formatting errors
 # date is the day when the comment was posted, gsub with regex will remove the timestamp
