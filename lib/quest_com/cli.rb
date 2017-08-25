@@ -5,7 +5,7 @@ class QuestCom::CLI
     input = gets.strip
     quest = scrape_for_quest_data(input)
     quest.show_top_comment
-    quest.options
+    quest.initial_menu
   end
 
   def greet
