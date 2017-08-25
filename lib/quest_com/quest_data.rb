@@ -30,4 +30,46 @@ class QuestCom::QuestData
   #   # and also [url] for links and [b] for map coords
   # end
 
+  def reset
+    @quest_id = nil
+    @top_comment = nil
+    @all_comments = []
+  end
+
+  def other_comments
+    puts "This will be a numbered list of the quest's other comments."
+  end
+
+  def show_top_comment
+    top = top_comment
+    puts "#{top.body}"
+  end
+
+  def options
+  	puts "This quest has #{all_comments.length - 1} more comments. Please select an option from the following:"
+    puts <<-HEREDOC
+    1. see more information about this comment
+    2. see a list of other comments
+    3. search for another quest's top comment
+    4. exit
+  	HEREDOC
+  	input = gets.strip
+
+  	if input == "1"
+  		top = top_comment
+  		top.more_information
+      # if this is selected, the information shows but the program fully exits
+      # need something like #comment_options (just list of other comments, search again or exit)
+  	elsif input == "2"
+  		other_comments
+    elsif input == "3"
+      reset
+  	elsif input == "4"
+  		exit
+  	else
+  		puts "That is not a valid response."
+  		options
+  	end
+  end
+
 end
