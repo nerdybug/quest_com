@@ -23,13 +23,20 @@ class QuestCom::QuestData
     @all_comments = []
   end
 
-  def other_comments
-    puts "This will be a numbered list of the quest's other comments."
-    menu(["C", "N", "E"])
-    # example
-    # 2. "I am the first part of..." by User on 2013-08-02 - rating: 1
-    # 3. "This is the second part of..." by User2 on 2013-09-04 - rating 1
+  def all_comments_list
+    puts "This will be a numbered list of all of the quest's comments." # here for testing
+    comments = get_all_comments
+    counter = 0
+    comments.collect do |comment|
+      body = comment.body
+      result = body.gsub(/\[url=.+\[\/url\]/, "") # this needs to be somewhere that tidies the comment body
+      new_result = result.split(/\s+/, 9)[0...8].join(' ') # pulls out the first handful of words
+      counter += 1
+      puts "#{counter}. #{new_result.strip}... #{comment.more_information}"
+      # binding.pry
+    end
     # options: pick number to see full comment, new search, exit; C, N, E
+    menu(["N", "E", "C"])
   end
 
   def get_all_comments
@@ -64,11 +71,11 @@ class QuestCom::QuestData
       when "I"
         puts "I = see more Information about this comment"
       when "L"
-        puts "L = see a List of other comments"
+        puts "L = see a List of all comments"
       when "N"
         puts "N = search for a New quest's top comment"
       when "C"
-        puts "Choose the number of any listed comment to see its full text"
+        puts "Or enter the number of any comment from the list to see its full text"
       when "E"
         puts "E = Exit"
       end
@@ -81,10 +88,10 @@ class QuestCom::QuestData
     case input.downcase
     when "i"
       current = find_current_comment
-      current[0].more_information
+      puts "#{current[0].more_information}"
       menu(["L", "N", "E"])
     when "l"
-      other_comments
+      all_comments_list
     when "n"
       reset
       QuestCom::CLI.new.call

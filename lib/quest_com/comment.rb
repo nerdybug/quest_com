@@ -24,11 +24,8 @@ class QuestCom::Comment
   end
 
   def more_information
-    puts <<-HEREDOC
-    Date posted: #{self.date}
-    Comment author: #{self.user}
-    Rating: #{self.rating}
-  	HEREDOC
+    "posted by #{self.user} on #{self.date} - rating: #{self.rating}"
+
   end
 
   # def comment_menu
@@ -50,6 +47,8 @@ class QuestCom::Comment
     end
   end
 
-
+  # def snippet
+  #   self.body.split(/\s+/, n+1)[0...n].join(' ')
+  # end
 
 end
