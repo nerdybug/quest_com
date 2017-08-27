@@ -16,6 +16,7 @@ class QuestCom::Comment
     hash.each {|key, value| send("#{key}=", value)}
     fix_date
     top?
+    clean_body
   end
 
   def fix_date
@@ -50,5 +51,13 @@ class QuestCom::Comment
   # def snippet
   #   self.body.split(/\s+/, n+1)[0...n].join(' ')
   # end
+
+  def clean_body
+    self.body = self.body.gsub(/\[npc=\d+\]/, "FIND_MY_NAME")
+    # binding.pry
+    self.body = self.body.gsub(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
+    self.body = self.body.gsub(/\[\/b\]\[\/url\]/, ")")
+    self.body = self.body.gsub(/\[\w+=\d+]/, "")
+  end
 
 end
