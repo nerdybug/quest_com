@@ -63,7 +63,7 @@ class QuestCom::Scraper
     # do the work to get from the user's input to creating a QuestData object
     prepared_input = prepare_input_for_search(@user_input)
     quest_id = parse_quest_id(search_for_result_body(prepared_input))
-    sleep 5
+    sleep 3
     comment_hash_array = find_comments_on_quest_page(quest_id)
     QuestCom::QuestData.new(quest_id, comment_hash_array)
   end
