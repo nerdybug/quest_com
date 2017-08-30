@@ -75,7 +75,7 @@ class QuestCom::QuestData
       when "N"
         puts "N = search for a New quest's top comment"
       when "C"
-        puts "Or enter the number of any comment from the numbered list to see its full text"
+        puts "OR enter the number of any comment from the numbered list to see its full text"
       when "E"
         puts "E = Exit"
       end
