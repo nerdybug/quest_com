@@ -5,10 +5,12 @@ class QuestCom::Scraper
   end
 
   def prepare_input_for_search(input)
-    remove = %w(and of the with : . , ' ! ?) # array of items that are irrelevant to the search - may need to add
-    removeRegex = Regexp.union(remove) # prapares the array for regex, example: /and|of|the|with/
+    # remove = %w(and of the with : . , ' ! ?) # array of items that are irrelevant to the search - may need to add
+    # removeRegex = Regexp.union(remove) # prapares the array for regex, example: /and|of|the|with/
+    remove_regex = /\b(and|of|the|with)\b|[!?.,-_=;:&\(\)\[\]]/
+    # binding.pry
     result = input.downcase
-    result = result.gsub(removeRegex, '').squeeze(" ") # handle any extraneous spaces
+    result = result.gsub(remove_regex, '').squeeze(" ") # handle any extraneous spaces
   end
 
   def hit_this_url(url)
