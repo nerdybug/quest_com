@@ -41,7 +41,7 @@ class QuestCom::Scraper
 
   def convert_to_json(javascript)
     # change ' to " to prepare for JSON conversion
-    result = javascript.gsub("'", '"')
+    result = javascript.gsub("'", '"') # needs fixing!! any ' in the body is getting changed
     # add double quotes around the keys
     result_is_ready = result.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
     result_is_ready
@@ -52,14 +52,10 @@ class QuestCom::Scraper
     result_body = hit_this_url(url)
     # to find the hash of comment data, we look for a match of var lv_comments0
     match = /var\s+lv_comments0\s+=\s+(\[.+\]);/.match(result_body)
-    # the info at index 1 of the match has all the comment data as javascript
+    # the info at index 1 of the match has all the comment data by itself as javascript
     javascript = match[1]
-    # binding.pry
     parsable_json = convert_to_json(javascript)
-    testing = JSON.stringify(javascript)
-    binding.pry
     comment_hash_array = JSON.parse(parsable_json) # this gives an array of hashes in tidy JSON
-    # binding.pry
   end
 
   def scrape_to_create_quest_object
