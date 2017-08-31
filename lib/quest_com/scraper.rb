@@ -5,12 +5,10 @@ class QuestCom::Scraper
   end
 
   def prepare_input_for_search(input)
-    # remove = %w(and of the with : . , ' ! ?) # array of items that are irrelevant to the search - may need to add
-    # removeRegex = Regexp.union(remove) # prapares the array for regex, example: /and|of|the|with/
     remove_regex = /\b(and|of|the|with)\b|[!?.,-_=;:&\(\)\[\]]/
     # binding.pry
     result = input.downcase
-    result = result.gsub(remove_regex, '').squeeze(" ") # handle any extraneous spaces
+    result = result.gsub(remove_regex, '').squeeze(" ")
   end
 
   def hit_this_url(url)
@@ -56,9 +54,12 @@ class QuestCom::Scraper
     match = /var\s+lv_comments0\s+=\s+(\[.+\]);/.match(result_body)
     # the info at index 1 of the match has all the comment data as javascript
     javascript = match[1]
+    # binding.pry
     parsable_json = convert_to_json(javascript)
+    testing = JSON.stringify(javascript)
+    binding.pry
     comment_hash_array = JSON.parse(parsable_json) # this gives an array of hashes in tidy JSON
-
+    # binding.pry
   end
 
   def scrape_to_create_quest_object
