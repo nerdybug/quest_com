@@ -39,12 +39,22 @@ class QuestCom::Scraper
     end
   end
 
-  def convert_to_json(javascript)
+  def tidy_for_json(javascript)
     # change ' to " to prepare for JSON conversion
-    result = javascript.gsub("'", '"') # needs fixing!! any ' in the body is getting changed
+    # result = javascript.gsub("'", '"')
     # add double quotes around the keys
-    result_is_ready = result.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
-    result_is_ready
+    # result_is_ready = result.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
+    # result_is_ready
+
+    # try altering the format for user, body, date then the lastEdit then replies
+    u_s_b = /\b(?<key>user|body|date):(?<startQuote>')(?<value>(?:[^']|(?<=\\)')+)(?<endQuote>')/
+    fix_one = javascript.gsub(u_s_b, '\k<key>:"\k<value>"')
+    le = /\b(?<key>lastEdit):(?<startQuote>\[)(?<value>(?:[^\[]|(?<=\\)\])+)(?<endQuote>\])/
+    fix_two = fix_one.gsub(le, '\k<key>:0')
+    r = /\b(?<key>replies):(?<startQuote>\[)(?<value>(?:[^\[]|(?<=\\)\])+)(?<endQuote>\])/
+    fix_three = fix_two.gsub(r, '\k<key>:[]')
+    # binding.pry
+    fix_three.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
   end
 
   def find_comments_on_quest_page(quest_id)
@@ -54,7 +64,7 @@ class QuestCom::Scraper
     match = /var\s+lv_comments0\s+=\s+(\[.+\]);/.match(result_body)
     # the info at index 1 of the match has all the comment data by itself as javascript
     javascript = match[1]
-    parsable_json = convert_to_json(javascript)
+    parsable_json = tidy_for_json(javascript)
     comment_hash_array = JSON.parse(parsable_json) # this gives an array of hashes in tidy JSON
   end
 
