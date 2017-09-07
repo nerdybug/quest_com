@@ -40,21 +40,17 @@ class QuestCom::Scraper
   end
 
   def tidy_for_json(javascript)
-    # change ' to " to prepare for JSON conversion
-    # result = javascript #.gsub("'", '"')
-    # add double quotes around the keys
-    # result_is_ready = result.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
-    # result_is_ready
-    # result.gsub!(/\b(?<key>replies):(\[.+\])/, '\k<key>:[]')
+    # not concerned with replies - remove the array data if any exists
     javascript.gsub!(/\b(?<key>replies):(\[.*?\])/, '\k<key>:[]')
+    # also not concerned with edit date - replace with 0
     javascript.gsub!(/\b(?<key>lastEdit):(\[.*?\])/, '\k<key>:0')
+    # locate unescaped double quotes to properly escape
+    javascript.gsub!(/(?<!\\)(?:\\{2})*\K"/, '\"')
+    # the user, body and date values are surrounded with single quotes that need to be double
     user_body_date_regex = /\b(?<key>user|body|date):(?<startQuote>')(?<value>(?:[^']|(?<=\\)')+)(?<endQuote>')/
     javascript.gsub!(user_body_date_regex, '\k<key>:"\k<value>"')
-    # still needs work here to fix unescaped " in body
-      bodies = javascript.scan(/\b(?<=body):"((?:.|\n)*?)"\s*[,]\bdate/)
-    # result.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
-      bodies.each { |arr|  arr.each { |str| str.gsub!('"', '\"')}}
-    binding.pry
+    # now find each key and surround it with double quotes to make json parser happy
+    javascript.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
     javascript
   end
 
