@@ -41,20 +41,21 @@ class QuestCom::Scraper
 
   def tidy_for_json(javascript)
     # change ' to " to prepare for JSON conversion
-    # result = javascript.gsub("'", '"')
+    result = javascript #.gsub("'", '"')
     # add double quotes around the keys
     # result_is_ready = result.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
     # result_is_ready
-
-    # try altering the format for user, body, date then the lastEdit then replies
-    u_s_b = /\b(?<key>user|body|date):(?<startQuote>')(?<value>(?:[^']|(?<=\\)')+)(?<endQuote>')/
-    fix_one = javascript.gsub(u_s_b, '\k<key>:"\k<value>"')
-    le = /\b(?<key>lastEdit):(?<startQuote>\[)(?<value>(?:[^\[]|(?<=\\)\])+)(?<endQuote>\])/
-    fix_two = fix_one.gsub(le, '\k<key>:0')
-    r = /\b(?<key>replies):(?<startQuote>\[)(?<value>(?:[^\[]|(?<=\\)\])+)(?<endQuote>\])/
-    fix_three = fix_two.gsub(r, '\k<key>:[]')
-    # binding.pry
-    fix_three.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
+    # result.gsub!(/\b(?<key>replies):(\[.+\])/, '\k<key>:[]')
+    result.gsub!(/\b(?<key>replies):(\[.*?\])/, '\k<key>:[]')
+    result.gsub!(/\b(?<key>lastEdit):(\[.*?\])/, '\k<key>:0')
+    user_body_date_regex = /\b(?<key>user|body|date):(?<startQuote>')(?<value>(?:[^']|(?<=\\)')+)(?<endQuote>')/
+    result.gsub!(user_body_date_regex, '\k<key>:"\k<value>"')
+    # still needs work here to fix unescaped " in body
+      bodies = result.scan(/\b(?<=body):"((?:.|\n)*?)"\s*[,]\bdate/)
+    # result.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
+      bodies.each { |arr|  arr.each { |str| str.gsub!('"', '\"')}}
+    binding.pry
+    result
   end
 
   def find_comments_on_quest_page(quest_id)
