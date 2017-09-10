@@ -44,11 +44,14 @@ class QuestCom::QuestData
 
   def show_top_comment
     comments = get_all_comments
-    comments.select do |comment|
-      if comment.top_comment
-        puts "\"#{comment.body}\"" # needs format tweaking still
-      end
-    end
+    # comments.select do |comment|
+    #   if comment.top_comment
+    #     puts "\"#{comment.body}\"" # needs format tweaking still
+    #   end
+    # end
+    top_rated = comments.max_by {|comment| comment.rating}
+    # binding.pry
+    puts "\"#{top_rated.body}\""
   end
 
   def find_current_comment
