@@ -6,7 +6,6 @@ class QuestCom::QuestData
     @comment_data = comment_hash_array # array of comment hash data
     puts "\nThe top comment for this quest is:\n\n" # only here for testing at the moment
     create_and_store_comments(@comment_data)
-    # binding.pry
   end
 
   def create_and_store_comments(array_of_hashes)
@@ -14,13 +13,18 @@ class QuestCom::QuestData
     array_of_hashes.each do |hash|
       @all_comments << QuestCom::Comment.new(hash)
     end
-    @all_comments
-    # binding.pry
+    order_comments
   end
 
   def reset
     @quest_id = nil
     @all_comments = []
+  end
+
+  def order_comments
+    comments = get_all_comments
+    sorted = comments.sort_by {|comment| comment.rating}.reverse
+    @all_comments = sorted
   end
 
   def all_comments_list
@@ -30,11 +34,10 @@ class QuestCom::QuestData
       body = comment.body
       snippet = body.split(/\s+/, 9)[0...8].join(' ') # pulls out the first handful of words
       counter += 1
-      puts "#{counter}. #{snippet.strip}... #{comment.more_information}"
+      puts "#{counter}. #{snippet.strip}... posted on #{comment.date}"
       # binding.pry
     end
     # options: pick number to see full comment, new search, exit; C, N, E
-    sleep 2
     menu(["N", "E", "C"])
   end
 
@@ -49,18 +52,29 @@ class QuestCom::QuestData
     #     puts "\"#{comment.body}\"" # needs format tweaking still
     #   end
     # end
-    top_rated = comments.max_by {|comment| comment.rating}
+
+    # top_rated = comments.max_by {|comment| comment.rating}
     # binding.pry
-    puts "\"#{top_rated.body}\""
+    comments[0].current = comments[0] # needs fixing
+    puts "\"#{comments[0].body}\""
   end
 
-  def find_current_comment
+  def show_selected(input)
+    # make selected comment the CURRENT comment
+    index = input.to_i - 1
+    comments = get_all_comments
+    selected = comments[index]
+    selected.current = selected # needs fixing
+    puts "\"#{selected.body}\""
+    menu(["I", "L", "N", "E", "C"])
+  end
+
+  def find_current_comment # needs fixing
     comments = get_all_comments
     comments.select {|comment| comment.current == comment}
   end
 
   def initial_menu
-    sleep 1
     menu(["I", "L", "N", "E"])
     input = gets.strip
     analyze_input(input)
@@ -68,6 +82,7 @@ class QuestCom::QuestData
 
   def menu(options)
     # take in an array of letters representing options to give the user
+    sleep 1
     puts "\nPlease select from the following:"
     options.each do |opt|
       case opt
@@ -88,26 +103,27 @@ class QuestCom::QuestData
   end
 
   def analyze_input(input)
+
+    if input <= get_all_comments.length.to_s
+      show_selected(input)
+    end
+
     case input.downcase
     when "i"
       current = find_current_comment
       puts "#{current[0].more_information}"
-      sleep 1
       menu(["L", "N", "E"])
     when "l"
       all_comments_list
     when "n"
       reset
-      sleep 1
       QuestCom::CLI.new.call
     when "e"
       exit
     else
       puts "Invalid selection."
-      sleep 1
       initial_menu
     end
-    # add in way to handle numeral entered from list of comments...
   end
 
 end
