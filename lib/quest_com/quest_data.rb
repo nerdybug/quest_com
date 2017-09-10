@@ -22,15 +22,15 @@ class QuestCom::QuestData
   end
 
   def order_comments
-    comments = get_all_comments
-    sorted = comments.sort_by {|comment| comment.rating}.reverse
+    # comments = get_all_comments
+    sorted = get_all_comments.sort_by {|comment| comment.rating}.reverse
     @all_comments = sorted
   end
 
   def all_comments_list
-    comments = get_all_comments
+    # comments = get_all_comments
     counter = 0
-    comments.collect do |comment|
+    get_all_comments.collect do |comment|
       body = comment.body
       snippet = body.split(/\s+/, 9)[0...8].join(' ') # pulls out the first handful of words
       counter += 1
@@ -42,11 +42,11 @@ class QuestCom::QuestData
   end
 
   def get_all_comments
-    self.all_comments
+    @all_comments
   end
 
   def show_top_comment
-    comments = get_all_comments
+    # comments = get_all_comments
     # comments.select do |comment|
     #   if comment.top_comment
     #     puts "\"#{comment.body}\"" # needs format tweaking still
@@ -55,23 +55,31 @@ class QuestCom::QuestData
 
     # top_rated = comments.max_by {|comment| comment.rating}
     # binding.pry
-    comments[0].current = comments[0] # needs fixing
-    puts "\"#{comments[0].body}\""
+    top = get_all_comments[0]
+    top.current = TRUE # needs fixing
+    puts "\"#{top.body}\""
   end
 
   def show_selected(input)
     # make selected comment the CURRENT comment
     index = input.to_i - 1
-    comments = get_all_comments
-    selected = comments[index]
-    selected.current = selected # needs fixing
+    # comments = get_all_comments
+    # clear_current_comment
+    selected = get_all_comments[index]
+    clear_current_comment
+    selected.current = TRUE # needs fixing
     puts "\"#{selected.body}\""
     menu(["I", "L", "N", "E", "C"])
   end
 
+  def clear_current_comment
+    # comments = get_all_comments
+    get_all_comments.each {|comment| comment.current = FALSE}
+  end
+
   def find_current_comment # needs fixing
-    comments = get_all_comments
-    comments.select {|comment| comment.current == comment}
+    # comments = get_all_comments
+    get_all_comments.select {|comment| comment.current == TRUE}
   end
 
   def initial_menu
