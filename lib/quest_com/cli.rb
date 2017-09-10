@@ -2,7 +2,8 @@ class QuestCom::CLI
 
   def call
     greet
-    input = gets.strip
+    input = Readline.readline
+    # binding.pry
     quest = scrape_for_quest_data(input)
     quest.show_top_comment
     quest.initial_menu

@@ -8,6 +8,4 @@ require 'pry'
 require 'net/http'
 require 'uri'
 require 'json'
-# module QuestCom
-#   # Your code goes here...
-# end
+require 'readline'
