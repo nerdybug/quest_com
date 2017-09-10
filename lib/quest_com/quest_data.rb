@@ -22,20 +22,17 @@ class QuestCom::QuestData
   end
 
   def order_comments
-    # comments = get_all_comments
     sorted = get_all_comments.sort_by {|comment| comment.rating}.reverse
     @all_comments = sorted
   end
 
   def all_comments_list
-    # comments = get_all_comments
     counter = 0
     get_all_comments.collect do |comment|
       body = comment.body
       snippet = body.split(/\s+/, 9)[0...8].join(' ') # pulls out the first handful of words
       counter += 1
       puts "#{counter}. #{snippet.strip}... posted on #{comment.date}"
-      # binding.pry
     end
     # options: pick number to see full comment, new search, exit; C, N, E
     menu(["N", "E", "C"])
@@ -46,28 +43,17 @@ class QuestCom::QuestData
   end
 
   def show_top_comment
-    # comments = get_all_comments
-    # comments.select do |comment|
-    #   if comment.top_comment
-    #     puts "\"#{comment.body}\"" # needs format tweaking still
-    #   end
-    # end
-
-    # top_rated = comments.max_by {|comment| comment.rating}
-    # binding.pry
     top = get_all_comments[0]
-    top.current = TRUE # needs fixing
+    top.current = TRUE
     puts "\"#{top.body}\""
   end
 
   def show_selected(input)
     # make selected comment the CURRENT comment
     index = input.to_i - 1
-    # comments = get_all_comments
-    # clear_current_comment
     selected = get_all_comments[index]
     clear_current_comment
-    selected.current = TRUE # needs fixing
+    selected.current = TRUE
     puts "\"#{selected.body}\""
     menu(["I", "L", "N", "E", "C"])
   end
@@ -83,12 +69,10 @@ class QuestCom::QuestData
   end
 
   def clear_current_comment
-    # comments = get_all_comments
     get_all_comments.each {|comment| comment.current = FALSE}
   end
 
-  def find_current_comment # needs fixing
-    # comments = get_all_comments
+  def find_current_comment
     get_all_comments.select {|comment| comment.current == TRUE}
   end
 
