@@ -72,6 +72,16 @@ class QuestCom::QuestData
     menu(["I", "L", "N", "E", "C"])
   end
 
+  def info
+    current = find_current_comment
+    puts "#{current[0].more_information}"
+    if current[0] == get_all_comments[0]
+      menu(["L", "N", "E"])
+    else
+      menu(["L", "N", "E", "C"])
+    end
+  end
+
   def clear_current_comment
     # comments = get_all_comments
     get_all_comments.each {|comment| comment.current = FALSE}
@@ -118,9 +128,7 @@ class QuestCom::QuestData
 
     case input.downcase
     when "i"
-      current = find_current_comment
-      puts "#{current[0].more_information}"
-      menu(["L", "N", "E"])
+      info
     when "l"
       all_comments_list
     when "n"
