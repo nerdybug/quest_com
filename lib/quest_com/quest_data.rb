@@ -100,7 +100,7 @@ class QuestCom::QuestData
         puts "E = Exit"
       end
     end
-    input = gets.strip
+    input = Readline.readline
     analyze_input(input)
   end
 
