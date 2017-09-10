@@ -1,16 +1,5 @@
 class QuestCom::Comment
-  attr_accessor :current, :commentv2, :commentid, :number, :id, :nreplies, :sticky, :user, :body, :date,
-  :rating, :indent, :roles, :deleted, :outofdate, :userRating, :replies, :lastEdit
-# of particular importance are: current, top_comment, number, nreplies, user, body, date, rating
-# current is the Comment object currently being viewed
-# number is the numeral for its position on the page starting at 0
-# nreplies is how many replies the comment has
-# user is the wowhead user's name who posted the comment
-# body is the content of the comment itself - needs review for formatting errors
-# date is the day when the comment was posted, gsub with regex will remove the timestamp
-# rating is the actual rate for the comment as wowhead.com automatically sorts the display under highest rated
-
-# quests that have comments that ALSO have comments are not parsing correctly...
+  attr_accessor :current, :user, :body, :date, :rating, :userRating
 
   def initialize(hash)
     hash.each {|key, value| send("#{key}=", value)}
@@ -29,31 +18,8 @@ class QuestCom::Comment
 
   end
 
-  # def comment_menu
-  #   puts <<-HEREDOC
-  #   1. see more information about this comment
-  #   2. see a list of other comments
-  #   3. search for another quest's top comment
-  #   4. exit
-  # 	HEREDOC
-  # end
-
-  # def top?
-  #   # if a comment is the top comment, it will also me the current comment
-  #   if self.number == 0 # NOT ALWAYS TRUE - need to look at which has highest RATING
-  #     self.top_comment = true
-  #     self.current = self
-  #   else
-  #     self.top_comment = false
-  #   end
-  # end
-
-  # def snippet
-  #   self.body.split(/\s+/, n+1)[0...n].join(' ')
-  # end
-
   def clean_body
-    self.body = self.body.gsub(/\[npc=\d+\]/, "FIND_MY_NAME")
+    self.body = self.body.gsub(/\[npc=\d+\]/, "FIND_MY_NAME") # in progress
     self.body = self.body.gsub(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
     self.body = self.body.gsub(/\[\/b\]\[\/url\]/, ")")
     self.body = self.body.gsub(/\[url=.+\[\/url\]/, "") # change this as it FULLY removes links

@@ -40,10 +40,20 @@ class QuestCom::Scraper
   end
 
   def tidy_for_json(javascript)
-    # not concerned with replies - remove the array data if any exists
-    javascript.gsub!(/\b(?<key>replies):(\[.*?\])/, '\k<key>:[]')
-    # also not concerned with edit date - replace with 0
-    javascript.gsub!(/\b(?<key>lastEdit):(\[.*?\])/, '\k<key>:0')
+    # remove key/values that do not matter for the purpose of this program
+    javascript.gsub!(/(,replies):(\[.*?\])/, '')
+    javascript.gsub!(/(,lastEdit):(\[.*?\])/, '')
+    javascript.gsub!(/(commentv2):(.*?,)/, '')
+    javascript.gsub!(/(number):(.*?,)/, '')
+    javascript.gsub!(/(id):(.*?,)/, '')
+    javascript.gsub!(/(nreplies):(.*?,)/, '')
+    javascript.gsub!(/(sticky):(.*?,)/, '')
+    javascript.gsub!(/(indent):(.*?,)/, '')
+    javascript.gsub!(/(roles):(.*?,)/, '')
+    javascript.gsub!(/(deleted):(.*?,)/, '')
+    javascript.gsub!(/(outofdate):(.*?,)/, '')
+    # javascript.gsub!(/(,userRating):(.*?,)/, '')
+
     # locate unescaped double quotes to properly escape
     javascript.gsub!(/(?<!\\)(?:\\{2})*\K"/, '\"')
     # the user, body and date values are surrounded with single quotes that need to be double
