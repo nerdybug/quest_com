@@ -52,14 +52,12 @@ class QuestCom::Scraper
     javascript.gsub!(/(roles):(.*?,)/, '')
     javascript.gsub!(/(deleted):(.*?,)/, '')
     javascript.gsub!(/(outofdate):(.*?,)/, '')
-    # javascript.gsub!(/(,userRating):(.*?,)/, '')
-
     # locate unescaped double quotes to properly escape
     javascript.gsub!(/(?<!\\)(?:\\{2})*\K"/, '\"')
     # the user, body and date values are surrounded with single quotes that need to be double
     user_body_date_regex = /\b(?<key>user|body|date):(?<startQuote>')(?<value>(?:[^']|(?<=\\)')+)(?<endQuote>')/
     javascript.gsub!(user_body_date_regex, '\k<key>:"\k<value>"')
-    # now find each key and surround it with double quotes to make json parser happy
+    # find each key and surround it with double quotes to make json parser happy
     javascript.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
     javascript
   end
