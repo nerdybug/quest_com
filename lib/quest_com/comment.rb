@@ -10,7 +10,7 @@ class QuestCom::Comment
 
   def fix_date
     # take "2013-08-29T09:44:16-05:00" and give me "2013-08-29"
-    self.date = self.date.gsub(/T(.*)/, "")
+    self.date.gsub!(/T(.*)/, "")
   end
 
   def more_information
@@ -19,11 +19,11 @@ class QuestCom::Comment
   end
 
   def clean_body
-    self.body = self.body.gsub(/\[npc=\d+\]/, "FIND_MY_NAME") # in progress
-    self.body = self.body.gsub(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
-    self.body = self.body.gsub(/\[\/b\]\[\/url\]/, ")")
-    self.body = self.body.gsub(/\[url=.+\[\/url\]/, "") # change this as it FULLY removes links
-    self.body = self.body.gsub(/\[\w+=\d+\]/, "")
+    self.body.gsub!(/\[npc=\d+\]/, "FIND_MY_NAME") # in progress
+    self.body.gsub!(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
+    self.body.gsub!(/\[\/b\]\[\/url\]/, ")")
+    self.body.gsub!(/\[url=.+\[\/url\]/, "") # change this as it FULLY removes links
+    self.body.gsub!(/\[\w+=\d+\]/, "")
     # need handle for [table...]...[/table] replace using: (see comment on wowhead.com for table)
   end
 
