@@ -41,17 +41,10 @@ class QuestCom::Scraper
 
   def tidy_for_json(javascript)
     # remove key/values that do not matter for the purpose of this program
-    javascript.gsub!(/(,replies):(\[.*?\])/, '')
-    javascript.gsub!(/(,lastEdit):(\[.*?\])/, '')
-    javascript.gsub!(/(commentv2):(.*?,)/, '')
-    javascript.gsub!(/(number):(.*?,)/, '')
-    javascript.gsub!(/(id):(.*?,)/, '')
-    javascript.gsub!(/(nreplies):(.*?,)/, '')
-    javascript.gsub!(/(sticky):(.*?,)/, '')
-    javascript.gsub!(/(indent):(.*?,)/, '')
-    javascript.gsub!(/(roles):(.*?,)/, '')
-    javascript.gsub!(/(deleted):(.*?,)/, '')
-    javascript.gsub!(/(outofdate):(.*?,)/, '')
+    javascript.gsub!(/\b(replies|lastEdit):(\[.*?\])/, '')
+    javascript.gsub!(/(\bcommentv2|number|id|nreplies|sticky|indent|roles|deleted|outofdate):.*?,/, '')
+    javascript.gsub!(/\b,userRating:\d+,+/, '')
+
     # locate unescaped double quotes to properly escape
     javascript.gsub!(/(?<!\\)(?:\\{2})*\K"/, '\"')
     # the user, body and date values are surrounded with single quotes that need to be double

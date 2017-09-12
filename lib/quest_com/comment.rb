@@ -1,5 +1,5 @@
 class QuestCom::Comment
-  attr_accessor :current, :user, :body, :date, :rating, :userRating
+  attr_accessor :current, :user, :body, :date, :rating
 
   def initialize(hash)
     hash.each {|key, value| send("#{key}=", value)}
