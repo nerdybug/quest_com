@@ -3,6 +3,7 @@ require './lib/quest_com/cli'
 require './lib/quest_com/scraper'
 require './lib/quest_com/quest_data'
 require './lib/quest_com/comment'
+require './lib/quest_com/handler'
 
 require 'pry'
 require 'net/http'
