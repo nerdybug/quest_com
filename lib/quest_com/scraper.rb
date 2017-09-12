@@ -4,10 +4,6 @@ class QuestCom::Scraper
     @user_input = user_input
   end
 
-  # def prepare_input_for_search(input)
-  #   QuestCom::Handler.prepare_input(input)
-  # end
-
   def hit_this_url(url)
     request = Net::HTTP::Get.new(url.to_s)
     result = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
