@@ -77,12 +77,6 @@ class QuestCom::QuestData
     get_all_comments.select {|comment| comment.current == TRUE}
   end
 
-  # def initial_menu
-  #   menu(["I", "L", "N", "E"])
-  #   input = gets.strip
-  #   analyze_input(input)
-  # end
-
   def menu(options)
     # take in an array of letters representing options to give the user
     sleep 1
