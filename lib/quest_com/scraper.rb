@@ -4,9 +4,9 @@ class QuestCom::Scraper
     @user_input = user_input
   end
 
-  def prepare_input_for_search(input)
-    QuestCom::Handler.prepare_input(input)
-  end
+  # def prepare_input_for_search(input)
+  #   QuestCom::Handler.prepare_input(input)
+  # end
 
   def hit_this_url(url)
     request = Net::HTTP::Get.new(url.to_s)
@@ -40,7 +40,7 @@ class QuestCom::Scraper
 
   def scrape_to_create_quest_object
     # do the work to get from the user's input to creating a QuestData object
-    prepared_input = prepare_input_for_search(@user_input)
+    prepared_input = QuestCom::Handler.prepare_input(@user_input)
     quest_id = parse_quest_id(search_for_result_body(prepared_input))
     sleep 3
     comment_hash_array = find_comments_on_quest_page(quest_id)
