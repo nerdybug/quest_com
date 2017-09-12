@@ -46,6 +46,7 @@ class QuestCom::QuestData
     top = get_all_comments[0]
     top.current = TRUE
     puts "\"#{top.body}\""
+    menu(["I", "L", "N", "E"])
   end
 
   def show_selected(input)
@@ -76,11 +77,11 @@ class QuestCom::QuestData
     get_all_comments.select {|comment| comment.current == TRUE}
   end
 
-  def initial_menu
-    menu(["I", "L", "N", "E"])
-    input = gets.strip
-    analyze_input(input)
-  end
+  # def initial_menu
+  #   menu(["I", "L", "N", "E"])
+  #   input = gets.strip
+  #   analyze_input(input)
+  # end
 
   def menu(options)
     # take in an array of letters representing options to give the user
@@ -105,7 +106,6 @@ class QuestCom::QuestData
   end
 
   def analyze_input(input)
-
     if input <= get_all_comments.length.to_s
       show_selected(input)
     end
@@ -122,7 +122,7 @@ class QuestCom::QuestData
       exit
     else
       puts "Invalid selection."
-      initial_menu
+      menu(["I", "L", "N", "E"])
     end
   end
 
