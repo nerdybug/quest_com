@@ -26,14 +26,9 @@ class QuestCom::QuestData
   end
 
   def all_comments_list
-    counter = 0
-    get_all_comments.collect do |comment|
-      body = comment.body
-      snippet = body.split(/\s+/, 9)[0...8].join(' ') # pulls out the first handful of words
-      counter += 1
-      puts "#{counter}. #{snippet.strip}... posted on #{comment.date}"
-    end
-    # options: pick number to see full comment, new search, exit; C, N, E
+    comments = get_all_comments
+    QuestCom::Handler.assemble_list(comments)
+    # options: New search, Exit, Choose number of next comment to view
     menu(["N", "E", "C"])
   end
 
@@ -45,6 +40,7 @@ class QuestCom::QuestData
     top = get_all_comments[0]
     top.current = TRUE
     QuestCom::Handler.prints_top(top)
+    # options: Info, List, New search, Exit
     menu(["I", "L", "N", "E"])
   end
 
@@ -55,15 +51,19 @@ class QuestCom::QuestData
     clear_current_comment
     selected.current = TRUE
     QuestCom::Handler.prints_top(selected)
+    # options: Info, List, New search, Exit, Choose number of next comment to view
     menu(["I", "L", "N", "E", "C"])
   end
 
   def info
-    current = find_current_comment
-    QuestCom::Handler.current_info(current)
-    if current[0] == get_all_comments[0]
+    current_comment = find_current_comment
+    QuestCom::Handler.comment_info(current_comment)
+    if current_comment == get_all_comments[0]
+      # different options needed when viewing the highest rated first comment
+      # options: List, New search, Exit
       menu(["L", "N", "E"])
     else
+      # options: List, New search, Exit, Choose number of next comment to view
       menu(["L", "N", "E", "C"])
     end
   end
@@ -73,7 +73,8 @@ class QuestCom::QuestData
   end
 
   def find_current_comment
-    get_all_comments.select {|comment| comment.current == TRUE}
+    results = get_all_comments.select {|comment| comment.current == TRUE}
+    current = results[0]
   end
 
   def menu(options)
@@ -84,10 +85,11 @@ class QuestCom::QuestData
   end
 
   def analyze_input(input)
+    # when input is a number within range of total comments
     if input <= get_all_comments.length.to_s
       show_selected(input)
     end
-
+    # when input is a letter
     case input.downcase
     when "i"
       info

@@ -67,17 +67,46 @@ class QuestCom::Handler
     puts "\"#{selected.body}\""
   end
 
-  def self.current_info(current)
-    puts "#{current[0].more_information}"
-  end
-
   def self.try_again
     puts "Invalid selection."
   end
 
   def self.goodbye
     puts "Thank you and goodbye."
+    sleep 1
     exit
+  end
+
+  def self.comment_info(comment)
+    puts "This comment was posted by #{comment.user} on #{comment.date} - rating: #{comment.rating}"
+  end
+
+  def self.assemble_list(comments)
+    counter = 0
+    comments.collect do |comment|
+      counter += 1
+      puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
+    end
+  end
+
+  def self.snip(body)
+    body.split(/\s+/, 9)[0...8].join(' ')
+  end
+
+  def self.clean(body)
+    body.gsub!(/\[npc=\d+\]/, "FIND_MY_NAME") # in progress
+    body.gsub!(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
+    body.gsub!(/\[\/b\]\[\/url\]/, ")")
+    body.gsub!(/\[url=.+\[\/url\]/, "") # change this as it FULLY removes links
+    body.gsub!(/\[\w+=\d+\]/, "")
+    # need handle for [table...]...[/table] replace using: (see comment on wowhead.com for table)
+    body
+  end
+
+  def self.shorten(date)
+    # take "2013-08-29T09:44:16-05:00" and give me "2013-08-29"
+    date.gsub!(/T(.*)/, "")
+    date
   end
 
 end
