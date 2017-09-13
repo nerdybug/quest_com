@@ -1,8 +1,8 @@
 class QuestCom::QuestData
-  attr_reader :quest_id, :all_comments
+  attr_reader :all_comments
 
-  def initialize(quest_id, comment_hash_array)
-    @quest_id = quest_id
+  def initialize(comment_hash_array)
+    # @quest_id = quest_id
     @comment_data = comment_hash_array # array of comment hash data
     create_and_store_comments(@comment_data)
   end
@@ -16,7 +16,7 @@ class QuestCom::QuestData
   end
 
   def reset
-    @quest_id = nil
+    # @quest_id = nil
     @all_comments = []
   end
 
