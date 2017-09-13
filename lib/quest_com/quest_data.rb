@@ -4,7 +4,6 @@ class QuestCom::QuestData
   def initialize(quest_id, comment_hash_array)
     @quest_id = quest_id
     @comment_data = comment_hash_array # array of comment hash data
-    puts "\nThe top comment for this quest is:\n\n" # only here for testing at the moment
     create_and_store_comments(@comment_data)
   end
 
@@ -45,7 +44,7 @@ class QuestCom::QuestData
   def show_top_comment
     top = get_all_comments[0]
     top.current = TRUE
-    puts "\"#{top.body}\""
+    QuestCom::Handler.prints_top(top)
     menu(["I", "L", "N", "E"])
   end
 
@@ -55,13 +54,13 @@ class QuestCom::QuestData
     selected = get_all_comments[index]
     clear_current_comment
     selected.current = TRUE
-    puts "\"#{selected.body}\""
+    QuestCom::Handler.prints_top(selected)
     menu(["I", "L", "N", "E", "C"])
   end
 
   def info
     current = find_current_comment
-    puts "#{current[0].more_information}"
+    QuestCom::Handler.current_info(current)
     if current[0] == get_all_comments[0]
       menu(["L", "N", "E"])
     else
@@ -79,22 +78,7 @@ class QuestCom::QuestData
 
   def menu(options)
     # take in an array of letters representing options to give the user
-    sleep 1
-    puts "\nPlease select from the following:"
-    options.each do |opt|
-      case opt
-      when "I"
-        puts "I = see more Information about this comment"
-      when "L"
-        puts "L = see a List of all comments"
-      when "N"
-        puts "N = search for a New quest's top comment"
-      when "C"
-        puts "OR enter the number of any comment from the numbered list to see its full text"
-      when "E"
-        puts "E = Exit"
-      end
-    end
+    QuestCom::Handler.puts_menu(options)
     input = Readline.readline
     analyze_input(input)
   end
@@ -113,9 +97,9 @@ class QuestCom::QuestData
       reset
       QuestCom::CLI.new.call
     when "e"
-      exit
+      QuestCom::Handler.goodbye
     else
-      puts "Invalid selection."
+      QuestCom::Handler.try_again
       menu(["I", "L", "N", "E"])
     end
   end

@@ -38,4 +38,46 @@ class QuestCom::Handler
     javascript.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
     javascript
   end
+
+  def self.puts_menu(options)
+    sleep 1
+    puts "\nPlease select from the following:"
+    options.each do |opt|
+      case opt
+      when "I"
+        puts "I = see more Information about this comment"
+      when "L"
+        puts "L = see a List of all comments"
+      when "N"
+        puts "N = search for a New quest's top comment"
+      when "C"
+        puts "OR enter the number of any comment from the numbered list to see its full text"
+      when "E"
+        puts "E = Exit"
+      end
+    end
+  end
+
+  def self.prints_top(top)
+    puts "\nThe top comment for this quest is:\n\n" # only here for testing at the moment
+    puts "\"#{top.body}\""
+  end
+
+  def self.prints_selected(selected)
+    puts "\"#{selected.body}\""
+  end
+
+  def self.current_info(current)
+    puts "#{current[0].more_information}"
+  end
+
+  def self.try_again
+    puts "Invalid selection."
+  end
+
+  def self.goodbye
+    puts "Thank you and goodbye."
+    exit
+  end
+
 end
