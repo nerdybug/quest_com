@@ -16,6 +16,6 @@ class QuestCom::Comment
   end
 
   def snippet
-    self.body = QuestCom::Handler.snip(self.body)
+    QuestCom::Handler.snip(self.body)
   end
 end
