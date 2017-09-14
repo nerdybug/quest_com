@@ -31,12 +31,18 @@ class QuestCom::Scraper
     comment_hash_array = JSON.parse(parsable_json) # this gives an array of hashes in tidy JSON
   end
 
-  def npc_name(npc)
-  	# ex npc_id = "npc=111383"
-  	url = URI.parse("http://www.wowhead.com/#{npc}")
-  	doc = Nokogiri::HTML(open(url))
-  	npc_name = doc.css('h1.heading-size-1').text
+  def find_name(id)
+    url = URI.parse("http://www.wowhead.com/#{id}")
+    doc = Nokogiri::HTML(open(url))
+    name = doc.css('h1.heading-size-1').text
   end
+
+  # def npc_name(npc)
+  # 	# ex npc_id = "npc=111383"
+  # 	url = URI.parse("http://www.wowhead.com/#{npc}")
+  # 	doc = Nokogiri::HTML(open(url))
+  # 	npc_name = doc.css('h1.heading-size-1').text
+  # end
 
   def from_input_to_quest(input)
     # do the work to get from the user's input to creating a QuestData object

@@ -102,7 +102,7 @@ class QuestCom::Handler
 
   def self.clean(body)
     body = npc_replace(body)
-
+    body = quest_replace(body)
     body.gsub!(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
     body.gsub!(/\[\/b\]\[\/url\]/, ")")
     body.gsub!(/\[url=.+\[\/url\]/, "") # change this as it FULLY removes links
@@ -114,9 +114,31 @@ class QuestCom::Handler
   def self.npc_replace(body)
     npcs = body.scan(/(?<=\[)\bnpc=\d+(?=\])/)
     scrape = QuestCom::Scraper.new
-    npcs.each {|npc| body = body.gsub(/\[\b#{npc}\]/, "#{scrape.npc_name(npc)}")}
+    npcs.each {|npc| body = body.gsub(/\[\b#{npc}\]/, "#{scrape.find_name(npc)}")}
     body
     # binding.pry
+  end
+
+  def self.quest_replace(body)
+    quests = body.scan(/(?<=\[)\bquest=\d+(?=\])/)
+    body = get_names(quests, body)
+    # scrape = QuestCom::Scraper.new
+    # quests.each {|quest| body = body.gsub(/\[\b#{quest}\]/, "#{scrape.find_name(quest)}")}
+    # body
+  end
+
+  def self.get_names(ids, body)
+    scrape = QuestCom::Scraper.new
+    ids.each {|id| body = body.gsub(/\[\b#{id}\]/, "#{scrape.find_name(id)}")}
+    body
+  end
+
+  def self.item_replace(body)
+    items = body.scan(/(?<=\[)\bitem=\d+(?=\])/)
+    body = get_names(items, body)
+    # scrape = QuestCom::Scraper.new
+    # quests.each {|quest| body = body.gsub(/\[\b#{quest}\]/, "#{scrape.find_name(quest)}")}
+    # body
   end
 
   def self.shorten(date)
