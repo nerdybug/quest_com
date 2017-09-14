@@ -4,6 +4,10 @@ class QuestCom::Handler
     puts "Type in the exact quest name then hit ENTER to see its top comment from wowhead:"
   end
 
+  def self.load_msg
+    puts "Searching...this may take a moment."
+  end
+
   def self.prepare_input(input)
     remove_regex = /\b(and|of|the|with)\b|[!?.,-_=;:&\(\)\[\]]/
     result = input.downcase
