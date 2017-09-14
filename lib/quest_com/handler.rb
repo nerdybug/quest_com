@@ -101,7 +101,7 @@ class QuestCom::Handler
   end
 
   def self.clean(body)
-    npc(body)
+    body = npc_replace(body)
 
     body.gsub!(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
     body.gsub!(/\[\/b\]\[\/url\]/, ")")
@@ -113,9 +113,10 @@ class QuestCom::Handler
 
   def self.npc_replace(body)
     npcs = body.scan(/(?<=\[)\bnpc=\d+(?=\])/)
-    npcs.each {|npc| body = body.gsub(/\[\b#{npc}\]/, "TESTING")}
+    scrape = QuestCom::Scraper.new
+    npcs.each {|npc| body = body.gsub(/\[\b#{npc}\]/, "#{scrape.npc_name(npc)}")}
     body
-    binding.pry
+    # binding.pry
   end
 
   def self.shorten(date)
