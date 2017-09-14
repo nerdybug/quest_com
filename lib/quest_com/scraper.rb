@@ -26,10 +26,7 @@ class QuestCom::Scraper
   def find_comments_on_quest_page(quest_id)
     url = URI.parse("http://www.wowhead.com/quest=#{quest_id}/")
     result_body = hit_this_url(url)
-    # to find the hash of comment data, we look for a match of var lv_comments0
-    match = /var\s+lv_comments0\s+=\s+(\[.+\]);/.match(result_body)
-    # the info at index 1 of the match has all the comment data by itself as javascript
-    javascript = match[1]
+    javascript = QuestCom::Handler.match_comments_variable(result_body)
     parsable_json = QuestCom::Handler.tidy_for_json(javascript)
     comment_hash_array = JSON.parse(parsable_json) # this gives an array of hashes in tidy JSON
   end

@@ -23,6 +23,13 @@ class QuestCom::Handler
     end
   end
 
+  def self.match_comments_variable(result_body)
+    # comment data lives in var lv_comments0
+    match = /var\s+lv_comments0\s+=\s+(\[.+\]);/.match(result_body)
+    # the info at index 1 of the match has all the comment data by itself as javascript
+    match[1]
+  end
+
   def self.tidy_for_json(javascript)
     # remove key/values that do not matter for the purpose of this program
     javascript.gsub!(/\b(replies|lastEdit):(\[.*?\])/, '')
@@ -94,11 +101,11 @@ class QuestCom::Handler
   end
 
   def self.clean(body)
-    body.gsub!(/\[npc=\d+\]/, "FIND_MY_NAME") # in progress
+    body.gsub!(/\[npc=\d+\]/, "NOT_FIXED") # in progress
     body.gsub!(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
     body.gsub!(/\[\/b\]\[\/url\]/, ")")
     body.gsub!(/\[url=.+\[\/url\]/, "") # change this as it FULLY removes links
-    body.gsub!(/\[\w+=\d+\]/, "")
+    # body.gsub!(/\[\w+=\d+\]/, "")
     # need handle for [table...]...[/table] replace using: (see comment on wowhead.com for table)
     body
   end
