@@ -101,13 +101,21 @@ class QuestCom::Handler
   end
 
   def self.clean(body)
-    body.gsub!(/\[npc=\d+\]/, "NOT_FIXED") # in progress
+    npc(body)
+
     body.gsub!(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
     body.gsub!(/\[\/b\]\[\/url\]/, ")")
     body.gsub!(/\[url=.+\[\/url\]/, "") # change this as it FULLY removes links
     # body.gsub!(/\[\w+=\d+\]/, "")
     # need handle for [table...]...[/table] replace using: (see comment on wowhead.com for table)
     body
+  end
+
+  def self.npc_replace(body)
+    npcs = body.scan(/(?<=\[)\bnpc=\d+(?=\])/)
+    npcs.each {|npc| body = body.gsub(/\[\b#{npc}\]/, "TESTING")}
+    body
+    binding.pry
   end
 
   def self.shorten(date)
