@@ -39,7 +39,6 @@ class QuestCom::Handler
     javascript.gsub!(/\b(replies|lastEdit):(\[.*?\])/, '')
     javascript.gsub!(/(\bcommentv2|number|id|nreplies|sticky|indent|roles|deleted|outofdate):.*?,/, '')
     javascript.gsub!(/\b,userRating:\d+,+/, '')
-
     # locate unescaped double quotes to properly escape
     javascript.gsub!(/(?<!\\)(?:\\{2})*\K"/, '\"')
     # the user, body and date values are surrounded with single quotes that need to be double
@@ -70,7 +69,7 @@ class QuestCom::Handler
   end
 
   def self.prints_top(top)
-    puts "\nThe top comment for this quest is:\n\n" # only here for testing at the moment
+    puts "\nThe top comment for this quest is:\n\n"
     puts "\"#{top.body}\""
   end
 
@@ -99,7 +98,6 @@ class QuestCom::Handler
     puts "\nList of all comments:\n\n"
     comments.collect do |comment|
       counter += 1
-      # comment.clean_body
       puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
     end
   end
@@ -109,21 +107,12 @@ class QuestCom::Handler
   end
 
   def self.clean(text)
-    # body = npc_replace(body)
-    # body = quest_replace(body)
     array = ["npc", "quest", "item", "zone", "spell", "achievement"]
     body = mass_replace(array, text)
-
-    # body = find_and_replace("npc", body)
-    # body = find_and_replace("item", body)
-    # body = find_and_replace("quest", body)
-    # body = find_and_replace("zone", body)
-    # body = find_and_replace("spell", body)
 
     body.gsub!(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
     body.gsub!(/\[\/b\]\[\/url\]/, ")")
     body.gsub!(/\[url=.+\[\/url\]/, "") # change this
-    # body.gsub!(/\[\w+=\d+\]/, "")
     # need handle for [table...]...[/table] replace using: (see comment on wowhead.com for table)
     body
   end
@@ -135,32 +124,15 @@ class QuestCom::Handler
   end
 
   def self.find_and_replace(id, body)
-    # idea here is to give this method npc or item or quest as the "id" parameter
     ids = body.scan(/(?<=\[)\b#{id}=\d+(?=\])/)
     body = get_names(ids, body)
   end
 
   def self.mass_replace(array, body)
-    # ex ids_array = ["quest", "npc", "item", "zone"]
+    # ex array = ["quest", "npc", "item", "zone"]
     hmm = array.each {|ele| find_and_replace("#{ele}", body)}
     body
-    # binding.pry
   end
-  #
-  # def self.npc_replace(body)
-  #   npcs = body.scan(/(?<=\[)\bnpc=\d+(?=\])/)
-  #   body = get_names(npcs, body)
-  # end
-  #
-  # def self.quest_replace(body)
-  #   quests = body.scan(/(?<=\[)\bquest=\d+(?=\])/)
-  #   body = get_names(quests, body)
-  # end
-  #
-  # def self.item_replace(body)
-  #   items = body.scan(/(?<=\[)\bitem=\d+(?=\])/)
-  #   body = get_names(items, body)
-  # end
 
   def self.shorten(date)
     # take "2013-08-29T09:44:16-05:00" and give me "2013-08-29"
