@@ -105,45 +105,58 @@ class QuestCom::Handler
   end
 
   def self.clean(body)
-    body = npc_replace(body)
-    body = quest_replace(body)
+    # body = npc_replace(body)
+    # body = quest_replace(body)
+    array = ["npc", "quest", "item", "zone", "spell", "achievement"]
+    body = mass_replace(array, body)
+
+    # body = find_and_replace("npc", body)
+    # body = find_and_replace("item", body)
+    # body = find_and_replace("quest", body)
+    # body = find_and_replace("zone", body)
+    # body = find_and_replace("spell", body)
+
     body.gsub!(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
     body.gsub!(/\[\/b\]\[\/url\]/, ")")
-    body.gsub!(/\[url=.+\[\/url\]/, "") # change this as it FULLY removes links
+    body.gsub!(/\[url=.+\[\/url\]/, "") # change this
     # body.gsub!(/\[\w+=\d+\]/, "")
     # need handle for [table...]...[/table] replace using: (see comment on wowhead.com for table)
     body
   end
 
-  def self.npc_replace(body)
-    npcs = body.scan(/(?<=\[)\bnpc=\d+(?=\])/)
+  def self.get_names(ids, body)
     scrape = QuestCom::Scraper.new
-    npcs.each {|npc| body = body.gsub(/\[\b#{npc}\]/, "#{scrape.find_name(npc)}")}
+    ids.each {|id| body.gsub!(/\[\b#{id}\]/, "#{scrape.find_name(id)}")}
+    body
+  end
+
+  def self.find_and_replace(id, body)
+    # idea here is to give this method npc or item or quest as the "id" parameter
+    ids = body.scan(/(?<=\[)\b#{id}=\d+(?=\])/)
+    body = get_names(ids, body)
+  end
+
+  def self.mass_replace(array, body)
+    # ex ids_array = ["quest", "npc", "item", "zone"]
+    hmm = array.each {|ele| find_and_replace("#{ele}", body)}
     body
     # binding.pry
   end
-
-  def self.quest_replace(body)
-    quests = body.scan(/(?<=\[)\bquest=\d+(?=\])/)
-    body = get_names(quests, body)
-    # scrape = QuestCom::Scraper.new
-    # quests.each {|quest| body = body.gsub(/\[\b#{quest}\]/, "#{scrape.find_name(quest)}")}
-    # body
-  end
-
-  def self.get_names(ids, body)
-    scrape = QuestCom::Scraper.new
-    ids.each {|id| body = body.gsub(/\[\b#{id}\]/, "#{scrape.find_name(id)}")}
-    body
-  end
-
-  def self.item_replace(body)
-    items = body.scan(/(?<=\[)\bitem=\d+(?=\])/)
-    body = get_names(items, body)
-    # scrape = QuestCom::Scraper.new
-    # quests.each {|quest| body = body.gsub(/\[\b#{quest}\]/, "#{scrape.find_name(quest)}")}
-    # body
-  end
+  #
+  # def self.npc_replace(body)
+  #   npcs = body.scan(/(?<=\[)\bnpc=\d+(?=\])/)
+  #   body = get_names(npcs, body)
+  # end
+  #
+  # def self.quest_replace(body)
+  #   quests = body.scan(/(?<=\[)\bquest=\d+(?=\])/)
+  #   body = get_names(quests, body)
+  # end
+  #
+  # def self.item_replace(body)
+  #   items = body.scan(/(?<=\[)\bitem=\d+(?=\])/)
+  #   body = get_names(items, body)
+  # end
 
   def self.shorten(date)
     # take "2013-08-29T09:44:16-05:00" and give me "2013-08-29"
