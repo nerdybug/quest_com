@@ -1,7 +1,7 @@
 class QuestCom::Handler
 
   def self.greet_user
-    puts "Type in the exact quest name then hit ENTER to see its top comment from wowhead:"
+    puts "***Type in the exact quest name then hit ENTER to see its top comment from wowhead:***"
   end
 
   def self.load_msg
@@ -51,7 +51,7 @@ class QuestCom::Handler
 
   def self.puts_menu(options)
     sleep 1
-    puts "\nPlease select from the following:"
+    puts "\n***Please select from the following:***"
     options.each do |opt|
       case opt
       when "I"
@@ -109,12 +109,13 @@ class QuestCom::Handler
   def self.clean(text)
     array = ["npc", "quest", "item", "zone", "spell", "achievement"]
     body = mass_replace(array, text)
-
-    body.gsub!(/\[url=\w+\W+\w+.\w+.\w+\/\w+=\d+#map\]\[b\]/, "(map coordinates: ")
-    body.gsub!(/\[\/b\]\[\/url\]/, ")")
-    body.gsub!(/\[url=.+\[\/url\]/, "") # change this
-    # need handle for [table...]...[/table] replace using: (see comment on wowhead.com for table)
+    replace_map_link = /\[\burl=.*?#map\]\[b\](?<coords>.*?)\[\/b\]\[\/url\]/
+    body.gsub!(replace_map_link, 'Coordinates: \k<coords>')
+    body.gsub!(/\[url=.+\[\/url\]/, '')
+    body.gsub!(/\[(b|ul|li)\]|\[(\/b|\/li|\/ul)\]/, '')
+    # body.gsub!(/\[\btable(.*?)\[\/\btable\]/, '(table best viewed via http://www.wowhead.com)')
     body
+    # binding.pry
   end
 
   def self.get_names(ids, body)
