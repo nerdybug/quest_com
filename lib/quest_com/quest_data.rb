@@ -39,6 +39,7 @@ class QuestCom::QuestData
   def show_top_comment
     top = get_all_comments[0]
     top.current = TRUE
+    top.clean_body
     QuestCom::Handler.prints_top(top)
     # options: Info, List, New search, Exit
     menu(["I", "L", "N", "E"])
@@ -46,10 +47,12 @@ class QuestCom::QuestData
 
   def show_selected(input)
     # make selected comment the CURRENT comment
+    QuestCom::Handler.load_msg
     index = input.to_i - 1
     selected = get_all_comments[index]
     clear_current_comment
     selected.current = TRUE
+    selected.clean_body
     QuestCom::Handler.prints_selected(selected)
     # options: Info, List, New search, Exit, Choose number of next comment to view
     menu(["I", "L", "N", "E", "C"])

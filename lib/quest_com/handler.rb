@@ -5,7 +5,7 @@ class QuestCom::Handler
   end
 
   def self.load_msg
-    puts "Searching...this may take a moment."
+    puts "Loading...please wait."
   end
 
   def self.prepare_input(input)
@@ -93,9 +93,13 @@ class QuestCom::Handler
   end
 
   def self.assemble_list(comments)
+    load_msg
+    sleep 1
     counter = 0
+    puts "\nList of all comments:\n\n"
     comments.collect do |comment|
       counter += 1
+      # comment.clean_body
       puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
     end
   end
@@ -104,11 +108,11 @@ class QuestCom::Handler
     body.split(/\s+/, 9)[0...8].join(' ')
   end
 
-  def self.clean(body)
+  def self.clean(text)
     # body = npc_replace(body)
     # body = quest_replace(body)
     array = ["npc", "quest", "item", "zone", "spell", "achievement"]
-    body = mass_replace(array, body)
+    body = mass_replace(array, text)
 
     # body = find_and_replace("npc", body)
     # body = find_and_replace("item", body)
