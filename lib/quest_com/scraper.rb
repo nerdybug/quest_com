@@ -1,9 +1,5 @@
 class QuestCom::Scraper
 
-  # def initialize(user_input)
-  #   @user_input = user_input
-  # end
-
   def hit_this_url(url)
     request = Net::HTTP::Get.new(url.to_s)
     result = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
@@ -32,17 +28,11 @@ class QuestCom::Scraper
   end
 
   def find_name(id)
+    id = URI.escape(id)
     url = URI.parse("http://www.wowhead.com/#{id}")
     doc = Nokogiri::HTML(open(url))
     name = doc.css('h1.heading-size-1').text
   end
-
-  # def npc_name(npc)
-  # 	# ex npc_id = "npc=111383"
-  # 	url = URI.parse("http://www.wowhead.com/#{npc}")
-  # 	doc = Nokogiri::HTML(open(url))
-  # 	npc_name = doc.css('h1.heading-size-1').text
-  # end
 
   def from_input_to_quest(input)
     # do the work to get from the user's input to creating a QuestData object

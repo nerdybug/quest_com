@@ -5,7 +5,7 @@ class QuestCom::Handler
   end
 
   def self.load_msg
-    puts "Loading...please wait."
+    puts "Loading...please wait.\n\n"
   end
 
   def self.prepare_input(input)
@@ -69,7 +69,7 @@ class QuestCom::Handler
   end
 
   def self.prints_top(top)
-    puts "\nThe top comment for this quest is:\n\n"
+    puts "The top comment for this quest is:\n\n"
     puts "\"#{top.body}\""
   end
 
@@ -95,7 +95,7 @@ class QuestCom::Handler
     load_msg
     sleep 1
     counter = 0
-    puts "\nList of all comments:\n\n"
+    puts "List of all comments:\n\n"
     comments.collect do |comment|
       counter += 1
       puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
@@ -109,29 +109,31 @@ class QuestCom::Handler
   def self.clean(text)
     array = ["npc", "quest", "item", "zone", "spell", "achievement"]
     body = mass_replace(array, text)
+
     replace_map_link = /\[\burl=.*?#map\]\[b\](?<coords>.*?)\[\/b\]\[\/url\]/
     body.gsub!(replace_map_link, 'Coordinates: \k<coords>')
     body.gsub!(/\[url=.+\[\/url\]/, '')
     body.gsub!(/\[(b|ul|li)\]|\[(\/b|\/li|\/ul)\]/, '')
     body.gsub!(/\[table.*?\[\/table\]/m, '(table best viewed via http://www.wowhead.com)') # temporary
+    body.gsub!(/\[hr\]/, '')
     body
     # binding.pry
   end
 
-  def self.get_names(ids, body)
+  def self.replace_names(ids, body)
     scrape = QuestCom::Scraper.new
     ids.each {|id| body.gsub!(/\[\b#{id}\]/, "#{scrape.find_name(id)}")}
     body
   end
 
   def self.find_and_replace(id, body)
-    ids = body.scan(/(?<=\[)\b#{id}=\d+(?=\])/)
-    body = get_names(ids, body)
+    ids = body.scan(/(?<=\[)#{id}=\d+.*?(?=\])/)
+    body = replace_names(ids, body)
   end
 
   def self.mass_replace(array, body)
     # ex array = ["quest", "npc", "item", "zone"]
-    hmm = array.each {|ele| find_and_replace("#{ele}", body)}
+    array.each {|ele| find_and_replace("#{ele}", body)}
     body
   end
 
