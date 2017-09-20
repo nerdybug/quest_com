@@ -113,7 +113,7 @@ class QuestCom::Handler
     body.gsub!(replace_map_link, 'Coordinates: \k<coords>')
     body.gsub!(/\[url=.+\[\/url\]/, '')
     body.gsub!(/\[(b|ul|li)\]|\[(\/b|\/li|\/ul)\]/, '')
-    # body.gsub!(/\[\btable(.*?)\[\/\btable\]/, '(table best viewed via http://www.wowhead.com)')
+    body.gsub!(/\[table.*?\[\/table\]/m, '(table best viewed via http://www.wowhead.com)') # temporary
     body
     # binding.pry
   end
