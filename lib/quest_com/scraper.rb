@@ -31,6 +31,7 @@ class QuestCom::Scraper
     id = URI.escape(id)
     url = URI.parse("http://www.wowhead.com/#{id}")
     doc = Nokogiri::HTML(open(url))
+    sleep 0.25
     name = doc.css('h1.heading-size-1').text
   end
 
