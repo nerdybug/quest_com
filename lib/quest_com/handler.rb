@@ -33,7 +33,7 @@ class QuestCom::Handler
     self.class.load_msg
     index = input.to_i - 1
     selected = comments[index]
-    data.clear_current_comment
+    clear_current_comment
     selected.current = TRUE
     puts "\"#{selected.body}\""
     menu(["I", "L", "N", "E", "C"])
@@ -48,6 +48,27 @@ class QuestCom::Handler
     menu(["I", "L", "N", "E"])
   end
 
+  def info
+    current_comment = find_current_comment
+    comment_info(current_comment)
+    if current_comment == comments[0]
+      # different options needed when viewing the highest rated first comment
+      # options: List, New search, Exit
+      menu(["L", "N", "E"])
+    else
+      # options: List, New search, Exit, Choose number of next comment to view
+      menu(["L", "N", "E", "C"])
+    end
+  end
+
+  def clear_current_comment
+    comments.each {|comment| comment.current = FALSE}
+  end
+
+  def find_current_comment
+    results = comments.select {|comment| comment.current == TRUE}
+    current = results[0]
+  end
 
   def menu(options)
     range = "1 - #{self.quest_data.get_all_comments.length}"
@@ -71,9 +92,13 @@ class QuestCom::Handler
     analyze_input(input)
   end
 
+  def comment_info(comment)
+    puts "This comment was posted by #{comment.user} on #{comment.date} - rating: #{comment.rating}"
+  end
+
   def analyze_input(input)
     # when input is a number within range of total comments
-    if input <= get_all_comments.length.to_s
+    if input <= comments.length.to_s
       show_selected(input)
     end
     # when input is a letter
@@ -104,10 +129,10 @@ class QuestCom::Handler
     exit
   end
 
+
   def self.load_msg
     puts "Loading...please wait.\n\n"
   end
-
 
   def self.greet_user
     puts "***Type in the exact quest name then hit ENTER to see its top comment from wowhead:***"
@@ -152,10 +177,6 @@ class QuestCom::Handler
     # find each key and surround it with double quotes to make json parser happy
     javascript.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
     javascript
-  end
-
-  def self.comment_info(comment)
-    puts "This comment was posted by #{comment.user} on #{comment.date} - rating: #{comment.rating}"
   end
 
   def self.snip(body)

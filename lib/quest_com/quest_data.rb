@@ -34,26 +34,4 @@ class QuestCom::QuestData
     @all_comments
   end
 
-  def info
-    current_comment = find_current_comment
-    QuestCom::Handler.comment_info(current_comment)
-    if current_comment == get_all_comments[0]
-      # different options needed when viewing the highest rated first comment
-      # options: List, New search, Exit
-      menu(["L", "N", "E"])
-    else
-      # options: List, New search, Exit, Choose number of next comment to view
-      menu(["L", "N", "E", "C"])
-    end
-  end
-
-  def clear_current_comment
-    get_all_comments.each {|comment| comment.current = FALSE}
-  end
-
-  def find_current_comment
-    results = get_all_comments.select {|comment| comment.current == TRUE}
-    current = results[0]
-  end
-
 end
