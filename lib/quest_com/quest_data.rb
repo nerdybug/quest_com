@@ -52,7 +52,6 @@ class QuestCom::QuestData
     selected = get_all_comments[index]
     clear_current_comment
     selected.current = TRUE
-    selected.clean_body
     QuestCom::Handler.prints_selected(selected)
     # options: Info, List, New search, Exit, Choose number of next comment to view
     menu(["I", "L", "N", "E", "C"])

@@ -16,7 +16,7 @@ class QuestCom::Comment
   end
 
   def snippet
+    clean_body
     snip = QuestCom::Handler.snip(self.body)
-    clean_snip = QuestCom::Handler.clean(snip)
   end
 end
