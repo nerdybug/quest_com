@@ -180,7 +180,9 @@ class QuestCom::Handler
   end
 
   def self.snip(body)
-    body.split(/\s+/, 9)[0...8].join(' ')
+    raw_snip = body.split(" ").first(30).join(" ")
+    clean_snip = clean(raw_snip)
+    clean_snip.split(/\s+/, 9)[0...8].join(' ')
   end
 
   def self.clean(text)
