@@ -1,10 +1,52 @@
 class QuestCom::Handler
+  attr_reader :quest_data
+
+  def initialize(quest_data)
+    @quest_data = quest_data
+  end
+
+  def find_length_of_comments
+    hmm = self.quest_data.get_all_comments.length
+    binding.pry
+  end
+
+  def assemble_list
+    self.class.load_msg
+    sleep 1
+    counter = 0
+    comments = self.quest_data.get_all_comments
+    puts "List of all comments:\n\n"
+    comments.collect do |comment|
+      counter += 1
+      puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
+    end
+  end
+
+  def puts_menu(options)
+    range = "1 - #{self.quest_data.get_all_comments.length}"
+    sleep 1
+    puts "\n***Please select from the following:***"
+    options.each do |opt|
+      case opt
+      when "I"
+        puts "I = see more Information about this comment"
+      when "L"
+        puts "L = see a List of all comments"
+      when "N"
+        puts "N = search for a New quest's top comment"
+      when "C"
+        puts "OR enter the number of any comment from the numbered list to see its full text, #{range}"
+      when "E"
+        puts "E = Exit"
+      end
+    end
+  end
 
   def self.greet_user
     puts "***Type in the exact quest name then hit ENTER to see its top comment from wowhead:***"
   end
 
-  def self.load_msg
+  def load_msg
     puts "Loading...please wait.\n\n"
   end
 
@@ -49,25 +91,6 @@ class QuestCom::Handler
     javascript
   end
 
-  def self.puts_menu(options)
-    sleep 1
-    puts "\n***Please select from the following:***"
-    options.each do |opt|
-      case opt
-      when "I"
-        puts "I = see more Information about this comment"
-      when "L"
-        puts "L = see a List of all comments"
-      when "N"
-        puts "N = search for a New quest's top comment"
-      when "C"
-        puts "OR enter the number of any comment from the numbered list to see its full text"
-      when "E"
-        puts "E = Exit"
-      end
-    end
-  end
-
   def self.prints_top(top)
     puts "The top comment for this quest is:\n\n"
     puts "\"#{top.body}\""
@@ -77,11 +100,11 @@ class QuestCom::Handler
     puts "\"#{selected.body}\""
   end
 
-  def self.try_again
+  def try_again
     puts "Invalid selection."
   end
 
-  def self.goodbye
+  def goodbye
     puts "Thank you and goodbye."
     sleep 1
     exit
@@ -89,17 +112,6 @@ class QuestCom::Handler
 
   def self.comment_info(comment)
     puts "This comment was posted by #{comment.user} on #{comment.date} - rating: #{comment.rating}"
-  end
-
-  def self.assemble_list(comments)
-    load_msg
-    sleep 1
-    counter = 0
-    puts "List of all comments:\n\n"
-    comments.collect do |comment|
-      counter += 1
-      puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
-    end
   end
 
   def self.snip(body)
@@ -142,5 +154,7 @@ class QuestCom::Handler
     date.gsub!(/T(.*)/, "")
     date
   end
+
+
 
 end

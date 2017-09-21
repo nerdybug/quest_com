@@ -1,13 +1,14 @@
 class QuestCom::QuestData
-  attr_reader :all_comments
+  attr_reader :all_comments, :handler
 
   def initialize(comment_hash_array)
     # @quest_id = quest_id
     @comment_data = comment_hash_array # array of comment hash data
-    create_and_store_comments(@comment_data)
+    create_and_save_comments(@comment_data)
+    @handler = QuestCom::Handler.new(self)
   end
 
-  def create_and_store_comments(array_of_hashes)
+  def create_and_save_comments(array_of_hashes)
     @all_comments = []
     array_of_hashes.each do |hash|
       @all_comments << QuestCom::Comment.new(hash)
@@ -20,14 +21,20 @@ class QuestCom::QuestData
     @all_comments = []
   end
 
+  def handle
+    self.handler # => QuestCom::Handler object with the QuestData stored
+  end
+
   def order_comments
     sorted = get_all_comments.sort_by {|comment| comment.rating}.reverse
     @all_comments = sorted
   end
 
   def all_comments_list
-    comments = get_all_comments
-    QuestCom::Handler.assemble_list(comments)
+    # comments = get_all_comments
+    # QuestCom::Handler.assemble_list(comments)
+    # handle = QuestCom::Handler.new(self)
+    handle.assemble_list
     # options: New search, Exit, Choose number of next comment to view
     menu(["N", "E", "C"])
   end
@@ -47,7 +54,7 @@ class QuestCom::QuestData
 
   def show_selected(input)
     # make selected comment the CURRENT comment
-    QuestCom::Handler.load_msg
+    handle.load_msg
     index = input.to_i - 1
     selected = get_all_comments[index]
     clear_current_comment
@@ -81,7 +88,7 @@ class QuestCom::QuestData
 
   def menu(options)
     # take in an array of letters representing options to give the user
-    QuestCom::Handler.puts_menu(options)
+    handle.puts_menu(options)
     input = Readline.readline
     analyze_input(input)
   end
@@ -101,9 +108,9 @@ class QuestCom::QuestData
       reset
       QuestCom::CLI.new.call
     when "e"
-      QuestCom::Handler.goodbye
+      handle.goodbye
     else
-      QuestCom::Handler.try_again
+      handle.try_again
       menu(["I", "L", "N", "E"])
     end
   end
