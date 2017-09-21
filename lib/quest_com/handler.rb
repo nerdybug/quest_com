@@ -22,7 +22,6 @@ class QuestCom::Handler
     self.class.load_msg
     sleep 1
     counter = 0
-    # comments = self.quest_data.get_all_comments
     puts "List of all comments:\n\n"
     comments.collect do |comment|
       counter += 1
@@ -39,10 +38,6 @@ class QuestCom::Handler
     puts "\"#{selected.body}\""
     menu(["I", "L", "N", "E", "C"])
   end
-
-  # def prints_selected(selected)
-  #
-  # end
 
   def show_top
     top = comments[0]
