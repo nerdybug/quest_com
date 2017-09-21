@@ -73,7 +73,7 @@ class QuestCom::Handler
   def menu(options)
     range = "1 - #{self.quest_data.get_all_comments.length}"
     sleep 1
-    puts "\n***Please select from the following:***"
+    puts "\n* * * Please select from the following: * * *\n\n"
     options.each do |opt|
       case opt
       when "I"
@@ -93,7 +93,7 @@ class QuestCom::Handler
   end
 
   def comment_info(comment)
-    puts "This comment was posted by #{comment.user} on #{comment.date} - rating: #{comment.rating}"
+    puts "\nThis comment was posted by #{comment.user} on #{comment.date} - rating: #{comment.rating}"
   end
 
   def analyze_input(input)
@@ -120,22 +120,22 @@ class QuestCom::Handler
   end
 
   def try_again
-    puts "Invalid selection."
+    puts "* * * Invalid selection. * * *"
   end
 
   def goodbye
-    puts "Thank you and goodbye."
+    puts "* * * Thank you and goodbye. * * *"
     sleep 1
     exit
   end
 
 
   def self.load_msg
-    puts "Loading...please wait.\n\n"
+    puts "* * * Loading...please wait. * * *\n\n"
   end
 
   def self.greet_user
-    puts "***Type in the exact quest name then hit ENTER to see its top comment from wowhead:***"
+    puts "* * * Type in the exact quest name then hit ENTER to see its top comment from wowhead: * * *"
   end
 
   def self.prepare_input(input)
@@ -151,7 +151,7 @@ class QuestCom::Handler
       quest_id = parsedArray[7][find_my_id][1]
       quest_id
     else
-      puts "There is no match. Please try your query on wowhead.com" # temporary message
+      puts "* * * There is no match. Please try your query on wowhead.com * * *" # temporary message
       # flesh this out a bit - specific text for no match vs too many matches?
       # what if the quest HAS NO COMMENTS as well
     end
