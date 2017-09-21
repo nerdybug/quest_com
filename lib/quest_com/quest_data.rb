@@ -30,39 +30,39 @@ class QuestCom::QuestData
     @all_comments = sorted
   end
 
-  def all_comments_list
-    # comments = get_all_comments
-    # QuestCom::Handler.assemble_list(comments)
-    # handle = QuestCom::Handler.new(self)
-    handle.assemble_list
-    # options: New search, Exit, Choose number of next comment to view
-    menu(["N", "E", "C"])
-  end
+  # def all_comments_list
+  #   # comments = get_all_comments
+  #   # QuestCom::Handler.assemble_list(comments)
+  #   # handle = QuestCom::Handler.new(self)
+  #   handle.assemble_list
+  #   # options: New search, Exit, Choose number of next comment to view
+  #   menu(["N", "E", "C"])
+  # end
 
   def get_all_comments
     @all_comments
   end
 
-  def show_top_comment
-    top = get_all_comments[0]
-    top.current = TRUE
-    top.clean_body
-    QuestCom::Handler.prints_top(top)
-    # options: Info, List, New search, Exit
-    menu(["I", "L", "N", "E"])
-  end
+  # def show_top_comment
+  #   top = get_all_comments[0]
+  #   top.current = TRUE
+  #   top.clean_body
+  #   QuestCom::Handler.prints_top(top)
+  #   # options: Info, List, New search, Exit
+  #   menu(["I", "L", "N", "E"])
+  # end
 
-  def show_selected(input)
-    # make selected comment the CURRENT comment
-    handle.load_msg
-    index = input.to_i - 1
-    selected = get_all_comments[index]
-    clear_current_comment
-    selected.current = TRUE
-    QuestCom::Handler.prints_selected(selected)
-    # options: Info, List, New search, Exit, Choose number of next comment to view
-    menu(["I", "L", "N", "E", "C"])
-  end
+  # def show_selected(input)
+  #   # make selected comment the CURRENT comment
+  #   handle.load_msg
+  #   index = input.to_i - 1
+  #   selected = get_all_comments[index]
+  #   clear_current_comment
+  #   selected.current = TRUE
+  #   QuestCom::Handler.prints_selected(selected)
+  #   # options: Info, List, New search, Exit, Choose number of next comment to view
+  #   menu(["I", "L", "N", "E", "C"])
+  # end
 
   def info
     current_comment = find_current_comment
@@ -86,33 +86,33 @@ class QuestCom::QuestData
     current = results[0]
   end
 
-  def menu(options)
-    # take in an array of letters representing options to give the user
-    handle.puts_menu(options)
-    input = Readline.readline
-    analyze_input(input)
-  end
+  # def menu(options)
+  #   # take in an array of letters representing options to give the user
+  #   handle.puts_menu(options)
+  #   input = Readline.readline
+  #   analyze_input(input)
+  # end
 
-  def analyze_input(input)
-    # when input is a number within range of total comments
-    if input <= get_all_comments.length.to_s
-      show_selected(input)
-    end
-    # when input is a letter
-    case input.downcase
-    when "i"
-      info
-    when "l"
-      all_comments_list
-    when "n"
-      reset
-      QuestCom::CLI.new.call
-    when "e"
-      handle.goodbye
-    else
-      handle.try_again
-      menu(["I", "L", "N", "E"])
-    end
-  end
+  # def analyze_input(input)
+  #   # when input is a number within range of total comments
+  #   if input <= get_all_comments.length.to_s
+  #     handle.show_selected(input)
+  #   end
+  #   # when input is a letter
+  #   case input.downcase
+  #   when "i"
+  #     info
+  #   when "l"
+  #     all_comments_list
+  #   when "n"
+  #     reset
+  #     QuestCom::CLI.new.call
+  #   when "e"
+  #     handle.goodbye
+  #   else
+  #     handle.try_again
+  #     menu(["I", "L", "N", "E"])
+  #   end
+  # end
 
 end

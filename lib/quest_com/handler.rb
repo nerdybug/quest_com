@@ -5,16 +5,24 @@ class QuestCom::Handler
     @quest_data = quest_data
   end
 
+  def comments
+    self.quest_data.get_all_comments
+  end
+
+  def data
+    self.quest_data
+  end
+
   def find_length_of_comments
-    hmm = self.quest_data.get_all_comments.length
-    binding.pry
+    comments.length
+    # binding.pry
   end
 
   def assemble_list
     self.class.load_msg
     sleep 1
     counter = 0
-    comments = self.quest_data.get_all_comments
+    # comments = self.quest_data.get_all_comments
     puts "List of all comments:\n\n"
     comments.collect do |comment|
       counter += 1
@@ -22,7 +30,31 @@ class QuestCom::Handler
     end
   end
 
-  def puts_menu(options)
+  def show_selected(input)
+    self.class.load_msg
+    index = input.to_i - 1
+    selected = comments[index]
+    data.clear_current_comment
+    selected.current = TRUE
+    puts "\"#{selected.body}\""
+    menu(["I", "L", "N", "E", "C"])
+  end
+
+  # def prints_selected(selected)
+  #
+  # end
+
+  def show_top
+    top = comments[0]
+    top.current = TRUE
+    top.clean_body
+    puts "The top comment for this quest is:\n\n"
+    puts "\"#{top.body}\""
+    menu(["I", "L", "N", "E"])
+  end
+
+
+  def menu(options)
     range = "1 - #{self.quest_data.get_all_comments.length}"
     sleep 1
     puts "\n***Please select from the following:***"
@@ -40,14 +72,50 @@ class QuestCom::Handler
         puts "E = Exit"
       end
     end
+    input = Readline.readline
+    analyze_input(input)
   end
+
+  def analyze_input(input)
+    # when input is a number within range of total comments
+    if input <= get_all_comments.length.to_s
+      show_selected(input)
+    end
+    # when input is a letter
+    case input.downcase
+    when "i"
+      info
+    when "l"
+      assemble_list
+      menu(["N", "E", "C"])
+    when "n"
+      reset
+      QuestCom::CLI.new.call
+    when "e"
+      goodbye
+    else
+      try_again
+      menu(["I", "L", "N", "E"])
+    end
+  end
+
+  def try_again
+    puts "Invalid selection."
+  end
+
+  def goodbye
+    puts "Thank you and goodbye."
+    sleep 1
+    exit
+  end
+
+  def self.load_msg
+    puts "Loading...please wait.\n\n"
+  end
+
 
   def self.greet_user
     puts "***Type in the exact quest name then hit ENTER to see its top comment from wowhead:***"
-  end
-
-  def load_msg
-    puts "Loading...please wait.\n\n"
   end
 
   def self.prepare_input(input)
@@ -89,25 +157,6 @@ class QuestCom::Handler
     # find each key and surround it with double quotes to make json parser happy
     javascript.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
     javascript
-  end
-
-  def self.prints_top(top)
-    puts "The top comment for this quest is:\n\n"
-    puts "\"#{top.body}\""
-  end
-
-  def self.prints_selected(selected)
-    puts "\"#{selected.body}\""
-  end
-
-  def try_again
-    puts "Invalid selection."
-  end
-
-  def goodbye
-    puts "Thank you and goodbye."
-    sleep 1
-    exit
   end
 
   def self.comment_info(comment)
@@ -154,7 +203,5 @@ class QuestCom::Handler
     date.gsub!(/T(.*)/, "")
     date
   end
-
-
 
 end
