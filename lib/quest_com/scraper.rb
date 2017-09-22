@@ -37,8 +37,8 @@ class QuestCom::Scraper
 
   def from_input_to_quest(input)
     # do the work to get from the user's input to creating a QuestData object
-    QuestCom::Handler.load_msg
     prepared_input = QuestCom::Handler.prepare_input(input)
+    QuestCom::Handler.load_msg
     quest_id = parse_quest_id(search_for_result_body(prepared_input))
     sleep 3
     comment_hash_array = find_comments_on_quest_page(quest_id)
