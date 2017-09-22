@@ -6,16 +6,11 @@ class QuestCom::Handler
   end
 
   def comments
-    self.quest_data.get_all_comments
+    self.quest_data.all_comments
   end
 
   def data
     self.quest_data
-  end
-
-  def find_length_of_comments
-    comments.length
-    # binding.pry
   end
 
   def assemble_list
