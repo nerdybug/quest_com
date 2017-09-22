@@ -109,7 +109,6 @@ class QuestCom::Handler
       assemble_list
       menu(["N", "E", "C"])
     when "n"
-      reset
       QuestCom::CLI.new.call
     when "e"
       goodbye
