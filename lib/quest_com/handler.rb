@@ -71,7 +71,7 @@ class QuestCom::Handler
   end
 
   def menu(options)
-    range = "1 - #{self.quest_data.get_all_comments.length}"
+    range = "1 - #{comments.length}"
     sleep 1
     puts "\n* * * Please select from the following: * * *\n\n"
     options.each do |opt|
