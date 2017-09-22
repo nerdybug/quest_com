@@ -3,23 +3,23 @@ class QuestCom::QuestData
 
   def initialize(comment_hash_array)
     # @quest_id = quest_id
-    @comment_data = comment_hash_array # array of comment hash data
-    create_and_save_comments(@comment_data)
+    # @comment_data = comment_hash_array # array of comment hash data
+    create_and_save_comments(comment_hash_array)
     @handler = QuestCom::Handler.new(self)
   end
 
-  def create_and_save_comments(array_of_hashes)
+  def create_and_save_comments(comment_hash_array)
     @all_comments = []
-    array_of_hashes.each do |hash|
+    comment_hash_array.each do |hash|
       @all_comments << QuestCom::Comment.new(hash)
     end
     order_comments
   end
 
-  def reset
-    # @quest_id = nil
-    @all_comments = []
-  end
+  # def reset
+  #   # @quest_id = nil
+  #   @all_comments = []
+  # end
 
   def handle
     self.handler # => QuestCom::Handler object with the QuestData stored
