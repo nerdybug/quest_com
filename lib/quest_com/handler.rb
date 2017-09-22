@@ -106,7 +106,7 @@ class QuestCom::Handler
     when "n"
       QuestCom::CLI.new.call
     when "e"
-      goodbye
+      self.class.goodbye
     else
       try_again
       menu(["I", "L", "N", "E"])
@@ -117,7 +117,7 @@ class QuestCom::Handler
     puts "* * * Invalid selection. * * *"
   end
 
-  def goodbye
+  def self.goodbye
     puts "* * * Thank you and goodbye. * * *"
     sleep 1
     exit
@@ -129,12 +129,15 @@ class QuestCom::Handler
   end
 
   def self.greet_user
-    puts "* * * Type in the exact quest name then hit ENTER to see its top comment from wowhead: * * *"
+    puts "* * * Type in the exact quest name then hit ENTER to see its top comment from wowhead - or EXIT to leave * * *"
   end
 
   def self.prepare_input(input)
-    remove_regex = /\b(and|of|the|with)\b|[!?.,-_=;:&\(\)\[\]]/
     result = input.downcase
+    if result == "exit"
+      goodbye
+    end
+    remove_regex = /\b(and|of|the|with)\b|[!?.,-_=;:&\(\)\[\]]/
     result.gsub!(remove_regex, '')
     result.squeeze(" ")
   end
@@ -144,10 +147,34 @@ class QuestCom::Handler
       find_my_id = names.index("#{potential_matches[0]}").to_i
       quest_id = parsedArray[7][find_my_id][1]
       quest_id
+    elsif potential_matches.length > 1
+      too_many_matches
     else
-      puts "* * * There is no match. Please try your query on wowhead.com * * *" # temporary message
-      # flesh this out a bit - specific text for no match vs too many matches?
+      no_matches
       # what if the quest HAS NO COMMENTS as well
+    end
+  end
+
+  def self.too_many_matches
+    puts "There are too many matches - please narrow your search at http://www.wowhead.com"
+    sleep 1
+    new_or_exit
+  end
+
+  def self.no_matches
+    puts "There is no match - please try your query at http://www.wowhead.com" # temporary message
+    sleep 1
+    new_or_exit
+  end
+
+  def self.new_or_exit
+    puts "\nWould you like to search again? Y/N"
+    input = Readline.readline
+    case input.downcase
+    when "y"
+      QuestCom::CLI.new.call
+    when "n"
+      goodbye
     end
   end
 
