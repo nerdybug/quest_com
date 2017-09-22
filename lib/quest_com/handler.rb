@@ -167,6 +167,11 @@ class QuestCom::Handler
     new_or_exit
   end
 
+  def self.no_comments
+    puts "This quest has no comments."
+    new_or_exit
+  end
+
   def self.new_or_exit
     puts "\nWould you like to search again? Y/N"
     input = Readline.readline
@@ -181,8 +186,12 @@ class QuestCom::Handler
   def self.match_comments_variable(result_body)
     # comment data lives in var lv_comments0
     match = /var\s+lv_comments0\s+=\s+(\[.+\]);/.match(result_body)
-    # the info at index 1 of the match has all the comment data by itself as javascript
-    match[1]
+    # the info at index 1 of the match has all the comment data by itself as javascript, nil = no comments
+    if match == nil
+      no_comments
+    else
+      match[1]
+    end
   end
 
   def self.tidy_for_json(javascript)
