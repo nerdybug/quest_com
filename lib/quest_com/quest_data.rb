@@ -26,7 +26,8 @@ class QuestCom::QuestData
   end
 
   def order_comments
-    sorted = get_all_comments.sort_by {|comment| comment.rating}.reverse
+    sorted = get_all_comments.sort_by {|comment| [-comment.rating, comment.date]}
+    # sorted = get_all_comments.sort_by {|comment| comment.rating}.reverse
     @all_comments = sorted
   end
 
