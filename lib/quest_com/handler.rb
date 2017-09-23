@@ -30,6 +30,7 @@ class QuestCom::Handler
     selected = comments[index]
     clear_current_comment
     selected.current = TRUE
+    selected.body = self.class.clean(selected.body)
     puts "\"#{selected.body}\""
     menu(["I", "L", "N", "E", "C"])
   end
@@ -221,7 +222,8 @@ class QuestCom::Handler
 
     replace_map_link = /\[\burl=.*?#map\]\[b\](?<coords>.*?)\[\/b\]\[\/url\]/
     body.gsub!(replace_map_link, 'Coordinates: \k<coords>')
-    body.gsub!(/\[url=.+\[\/url\]/, '')
+    # body.gsub!(/\[url=.+\[\/url\]/, '')
+    body.gsub!(/(\[url=)(.*?)(\].*?\[\/url\])/, '\2')
     body.gsub!(/\[(b|ul|li)\]|\[(\/b|\/li|\/ul)\]/, '')
     body.gsub!(/\[table.*?\[\/table\]/m, '(table best viewed via http://www.wowhead.com)') # temporary
     body.gsub!(/\[hr\]/, '')
