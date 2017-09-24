@@ -21,6 +21,7 @@ class QuestCom::Handler
     comments.collect do |comment|
       counter += 1
       puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
+      # => 1. Quest located at the west shore of Val'sharah... posted on 2016-09-18
     end
   end
 
@@ -28,10 +29,11 @@ class QuestCom::Handler
     self.class.load_msg
     index = input.to_i - 1
     selected = comments[index]
-    clear_current_comment
+    clear_current_comment # => sets current attr to FALSE for all comments
     selected.current = TRUE
-    selected.body = self.class.clean(selected.body)
-    puts "\"#{selected.body}\""
+    selected.clean_body
+    puts "#{selected.body}"
+    # options: Info, List, New, Exit, Choose number
     menu(["I", "L", "N", "E", "C"])
   end
 
@@ -41,6 +43,7 @@ class QuestCom::Handler
     top.clean_body
     puts "The top comment for this quest is:\n\n"
     puts "#{top.body}"
+    # options: Info, List, New, Exit
     menu(["I", "L", "N", "E"])
   end
 
@@ -48,11 +51,11 @@ class QuestCom::Handler
     current_comment = find_current_comment
     comment_info(current_comment)
     if current_comment == comments[0]
-      # different options needed when viewing the highest rated first comment
-      # options: List, New search, Exit
+      # different options needed when viewing the highest rated comment
+      # options: List, New, Exit
       menu(["L", "N", "E"])
     else
-      # options: List, New search, Exit, Choose number of next comment to view
+      # options: List, New, Exit, Choose number
       menu(["L", "N", "E", "C"])
     end
   end
@@ -94,7 +97,7 @@ class QuestCom::Handler
 
   def analyze_input(input)
     # when input is a number within range of total comments
-    if input <= comments.length.to_s
+    if input.to_i <= comments.length && input.to_i != 0
       show_selected(input)
     end
     # when input is a letter
@@ -103,13 +106,16 @@ class QuestCom::Handler
       info
     when "l"
       assemble_list
+      # options: New, Exit, Choose number
       menu(["N", "E", "C"])
     when "n"
       QuestCom::CLI.new.call
     when "e"
       self.class.goodbye
     else
+      binding.pry
       try_again
+      # options: Info, List, New, Exit
       menu(["I", "L", "N", "E"])
     end
   end
@@ -130,7 +136,7 @@ class QuestCom::Handler
   end
 
   def self.greet_user
-    puts "* * * Type in the exact quest name then hit ENTER to see its top comment from wowhead - or EXIT to leave * * *"
+    puts "* * * Type in the exact quest name and hit Enter to see its top comment from wowhead - or type exit to leave * * *"
   end
 
   def self.prepare_input(input)
@@ -143,16 +149,16 @@ class QuestCom::Handler
     result.squeeze(" ")
   end
 
-  def self.analyze_matches(parsedArray, names, potential_matches)
+  def self.analyze_matches(parsed_array, names, potential_matches)
+    # potential_matches ex: ["Coastal Gloom (Quest)"] or ["Candy Bucket (Quest)", "Candy Bucket (Quest)", "Candy Bucket (Quest)", "Candy Bucket (Quest)"]
     if potential_matches.length == 1
       find_my_id = names.index("#{potential_matches[0]}").to_i
-      quest_id = parsedArray[7][find_my_id][1]
-      quest_id
+      quest_id = parsed_array[7][find_my_id][1] # per structure of server response
+      quest_id # => 43738
     elsif potential_matches.length > 1
       too_many_matches
     else
       no_matches
-      # what if the quest HAS NO COMMENTS as well
     end
   end
 
@@ -219,32 +225,42 @@ class QuestCom::Handler
   def self.clean(text)
     array = ["npc", "quest", "item", "zone", "spell", "achievement"]
     body = mass_replace(array, text)
-
+    # remove map link, keep coordinates
     replace_map_link = /\[\burl=.*?#map\]\[b\](?<coords>.*?)\[\/b\]\[\/url\]/
     body.gsub!(replace_map_link, 'Coordinates: \k<coords>')
-    # body.gsub!(/\[url=.+\[\/url\]/, '')
+    # remove link tags, keep actual link
     body.gsub!(/(\[url=)(.*?)(\].*?\[\/url\])/, '\2')
-    body.gsub!(/\[(b|ul|li)\]|\[(\/b|\/li|\/ul)\]/, '')
+    # remove b, u, i, ul, li tags
+    body.gsub!(/\[(b|u|i|ul|li)\]|\[(\/b|\/u|\/i|\/li|\/ul)\]/, '')
+    # replace tables
     body.gsub!(/\[table.*?\[\/table\]/m, '(* * * detailed table best viewed on http://www.wowhead.com * * *)') # temporary
+    # remove hr tags
     body.gsub!(/\[hr\]/, '')
+    # replace quote tags
     body.gsub!(/(\[quote\]|\[\/quote\])/, '"')
+    # replace spoiler tag
+    body.gsub!(/\[spoiler\]/, 'SPOILER>>>')
+    body.gsub!(/\[\/spoiler\]/, '<<<SPOILER')
     body
     # binding.pry
   end
 
   def self.replace_names(ids, body)
+    # ids ex: npc=12345, quest=23456
     scrape = QuestCom::Scraper.new
     ids.each {|id| body.gsub!(/\[\b#{id}\]/, "#{scrape.find_name(id)}")}
     body
   end
 
   def self.find_and_replace(id, body)
+    # id ex: npc, quest
     ids = body.scan(/(?<=\[)#{id}=\d+.*?(?=\])/)
+    # ids ex: npc=12345, quest=23456
     body = replace_names(ids, body)
   end
 
   def self.mass_replace(array, body)
-    # ex array = ["quest", "npc", "item", "zone"]
+    # array ex: ["quest", "npc", "item", "zone"]
     array.each {|ele| find_and_replace("#{ele}", body)}
     body
   end

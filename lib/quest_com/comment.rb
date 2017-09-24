@@ -4,11 +4,11 @@ class QuestCom::Comment
   def initialize(hash)
     hash.each {|key, value| send("#{key}=", value)}
     fix_date
-    # clean_body
   end
 
   def fix_date
     self.date = QuestCom::Handler.shorten(self.date)
+    # => QuestCom::Comment.date = "2013-08-29"
   end
 
   def clean_body
@@ -16,7 +16,6 @@ class QuestCom::Comment
   end
 
   def snippet
-    # clean_body
-    snip = QuestCom::Handler.snip(self.body)
+    QuestCom::Handler.snip(self.body)
   end
 end
