@@ -6,11 +6,11 @@ class QuestCom::Handler
   end
 
   def comments
-    self.quest_data.all_comments
+    self.quest_data.all_comments # => array of Comment objects for the quest
   end
 
   def data
-    self.quest_data
+    self.quest_data # => QuestData object
   end
 
   def assemble_list
@@ -40,7 +40,7 @@ class QuestCom::Handler
     top.current = TRUE
     top.clean_body
     puts "The top comment for this quest is:\n\n"
-    puts "\"#{top.body}\""
+    puts "#{top.body}"
     menu(["I", "L", "N", "E"])
   end
 
@@ -225,8 +225,9 @@ class QuestCom::Handler
     # body.gsub!(/\[url=.+\[\/url\]/, '')
     body.gsub!(/(\[url=)(.*?)(\].*?\[\/url\])/, '\2')
     body.gsub!(/\[(b|ul|li)\]|\[(\/b|\/li|\/ul)\]/, '')
-    body.gsub!(/\[table.*?\[\/table\]/m, '(table best viewed via http://www.wowhead.com)') # temporary
+    body.gsub!(/\[table.*?\[\/table\]/m, '(* * * detailed table best viewed on http://www.wowhead.com * * *)') # temporary
     body.gsub!(/\[hr\]/, '')
+    body.gsub!(/(\[quote\]|\[\/quote\])/, '"')
     body
     # binding.pry
   end
