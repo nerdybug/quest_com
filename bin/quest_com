@@ -2,4 +2,5 @@
 
 require './lib/quest_com'
 
-QuestCom::CLI.new.call
+# QuestCom::
+CLI.start

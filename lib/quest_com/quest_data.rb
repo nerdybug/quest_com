@@ -1,5 +1,6 @@
-class QuestCom::QuestData
+class QuestData
   attr_accessor :all_comments, :handler
+  include QuestCom
 
   def initialize(comment_hash_array)
     create_and_save_comments(comment_hash_array)
@@ -11,7 +12,7 @@ class QuestCom::QuestData
     comment_hash_array.each do |hash|
       self.all_comments << QuestCom::Comment.new(hash)
     end
-    order_comments 
+    order_comments
   end
 
   def handle

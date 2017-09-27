@@ -1,4 +1,11 @@
-class QuestCom::Scraper
+require 'net/http'
+require 'uri'
+require 'json'
+require 'open-uri'
+require 'nokogiri'
+
+class Scraper
+  include QuestCom
 
   def hit_this_url(url)
     request = Net::HTTP::Get.new(url.to_s)
@@ -15,17 +22,18 @@ class QuestCom::Scraper
   def parse_quest_id(result_body)
     parsed_array = Array(eval(result_body))
     # => Array ["coastal gloom", ["Coastal Gloom (Quest)"], [], [], [], [], [], [[5, 43738,0]]]
-    names = parsed_array[1] # ex => ["Fragrant Dreamleaf (Item)", "Fragrant Dreamleaf (Quest)", "Fragrant Dreamleaf (Object)"]
-    potential_matches = names.select {|name| name.include? "(Quest)"}
-    QuestCom::Handler.analyze_matches(parsed_array, names, potential_matches)
+        # names = parsed_array[1] # ex => ["Fragrant Dreamleaf (Item)", "Fragrant Dreamleaf (Quest)", "Fragrant Dreamleaf (Object)"]
+        # potential_matches = names.select {|name| name.include? "(Quest)"}
+    analyze_quest_matches(parsed_array) # module method
+    # , names, potential_matches)
     # => quest_id to search with or prompts user re: no matches or too many matches
   end
 
   def find_comments_on_quest_page(quest_id)
     url = URI.parse("http://www.wowhead.com/quest=#{quest_id}/")
     result_body = hit_this_url(url)
-    javascript = QuestCom::Handler.match_comments_variable(result_body)
-    parsable_json = QuestCom::Handler.tidy_for_json(javascript)
+    javascript = match_comments_variable(result_body) # module method
+    parsable_json = tidy_for_json(javascript) # module method
     comment_hash_array = JSON.parse(parsable_json) # => array of hashes in tidy JSON
   end
 
@@ -39,12 +47,12 @@ class QuestCom::Scraper
 
   def from_input_to_quest(input)
     # do the work to get from the user's input to creating a QuestData object
-    prepared_input = QuestCom::Handler.prepare_input(input)
-    QuestCom::Handler.load_msg
+    prepared_input = prepare_input(input) # module method
+    CLI.load_msg
     quest_id = parse_quest_id(search_for_result_body(prepared_input))
     sleep 3
     comment_hash_array = find_comments_on_quest_page(quest_id)
-    QuestCom::QuestData.new(comment_hash_array)
+    QuestData.new(comment_hash_array)
   end
 
 end
