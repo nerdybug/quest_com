@@ -15,17 +15,17 @@ class QuestCom::Handler
     self.quest_data # => QuestData object
   end
 
-  def assemble_list
-    CLI.load_msg
-    sleep 1
-    counter = 0
-    puts "List of all comments:\n\n"
-    comments.collect do |comment|
-      counter += 1
-      puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
-      # => 1. Quest located at the west shore of Val'sharah... posted on 2016-09-18
-    end
-  end
+  # def assemble_list
+  #   CLI.load_msg
+  #   sleep 1
+  #   counter = 0
+  #   puts "List of all comments:\n\n"
+  #   comments.collect do |comment|
+  #     counter += 1
+  #     puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
+  #     # => 1. Quest located at the west shore of Val'sharah... posted on 2016-09-18
+  #   end
+  # end
 
   def show_selected(input)
     CLI.load_msg
@@ -51,7 +51,8 @@ class QuestCom::Handler
 
   def info
     current_comment = find_current_comment
-    comment_info(current_comment)
+    # CLI.comment_info(current_comment)
+    current_comment.show_info
     if current_comment == comments[0]
       # different options needed when viewing the highest rated comment
       # options: List, New, Exit
@@ -61,6 +62,10 @@ class QuestCom::Handler
       menu(["L", "N", "E", "C"])
     end
   end
+
+  # def comment_info(comment)
+  #   puts "\nThis comment was posted by #{comment.user} on #{comment.date} - rating: #{comment.rating}"
+  # end
 
   def clear_current_comment
     comments.each {|comment| comment.current = FALSE}
@@ -93,10 +98,6 @@ class QuestCom::Handler
     analyze_input(input)
   end
 
-  def comment_info(comment)
-    puts "\nThis comment was posted by #{comment.user} on #{comment.date} - rating: #{comment.rating}"
-  end
-
   def analyze_input(input)
     # when input is a number within range of total comments
     if input.to_i <= comments.length && input.to_i != 0
@@ -107,7 +108,7 @@ class QuestCom::Handler
     when "i"
       info
     when "l"
-      assemble_list
+      CLI.assemble_list(comments)
       # options: New, Exit, Choose number
       menu(["N", "E", "C"])
     when "n"

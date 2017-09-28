@@ -1,5 +1,5 @@
 class QuestCom::Comment
-  attr_accessor :current, :user, :body, :date, :rating
+  attr_accessor :user, :body, :date, :rating, :current
 
   def initialize(hash)
     hash.each {|key, value| send("#{key}=", value)}
@@ -17,5 +17,9 @@ class QuestCom::Comment
 
   def snippet
     QuestCom::Handler.snip(self.body)
+  end
+
+  def show_info
+    CLI.comment_info(self)
   end
 end

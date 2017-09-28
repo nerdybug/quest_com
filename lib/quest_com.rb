@@ -61,4 +61,10 @@ module QuestCom
     javascript
   end
 
+  # def order_comments(quest_obj) # arg: QuestData object
+  #   comments = quest_obj.all_comments
+  #   sorted = comments.sort_by {|comment| [-comment.rating, comment.date]}
+  #   quest_obj.all_comments = sorted
+  # end
+
 end

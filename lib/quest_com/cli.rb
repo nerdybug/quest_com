@@ -7,7 +7,7 @@ class CLI
     input = Readline.readline
     # binding.pry
     quest = Scraper.new.from_input_to_quest(input)
-    quest.handle.show_top
+    quest.handle.show_top #####
     # quest.initial_menu
   end
 
@@ -51,6 +51,23 @@ class CLI
     puts "* * * Thank you and goodbye. * * *"
     sleep 1
     exit
+  end
+
+  def self.assemble_list(comments)
+    load_msg
+    sleep 1
+    counter = 1
+    puts "List of all comments:\n\n"
+    comments.collect do |comment|
+      # counter += 1
+      puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
+      # => 1. Quest located at the west shore of Val'sharah... posted on 2016-09-18
+      counter += 1
+    end
+  end
+
+  def self.comment_info(comment)
+    puts "\nThis comment was posted by #{comment.user} on #{comment.date} - rating: #{comment.rating}"
   end
 
 end
