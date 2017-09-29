@@ -22,23 +22,20 @@ class Scraper
   def parse_quest_id(result_body)
     parsed_array = Array(eval(result_body))
     # => Array ["coastal gloom", ["Coastal Gloom (Quest)"], [], [], [], [], [], [[5, 43738,0]]]
-        # names = parsed_array[1] # ex => ["Fragrant Dreamleaf (Item)", "Fragrant Dreamleaf (Quest)", "Fragrant Dreamleaf (Object)"]
-        # potential_matches = names.select {|name| name.include? "(Quest)"}
-    analyze_quest_matches(parsed_array) # module method
-    # , names, potential_matches)
-    # => quest_id to search with or prompts user re: no matches or too many matches
+    analyze("quest_matches", parsed_array) # module method
+    # => quest_id to search with or prompts user if no matches or too many matches
   end
 
   def find_comments_on_quest_page(quest_id)
     url = URI.parse("http://www.wowhead.com/quest=#{quest_id}/")
     result_body = hit_this_url(url)
-    javascript = match_comments_variable(result_body) # module method
-    parsable_json = tidy_for_json(javascript) # module method
+    javascript = analyze("find_comments", result_body) # module method
+    parsable_json = analyze("get_json", javascript) # module method
     comment_hash_array = JSON.parse(parsable_json) # => array of hashes in tidy JSON
   end
 
   def find_name(id)
-    id = URI.escape(id) # in case id is something like npc=12345 domain=legion
+    id = URI.escape(id) # sometimes an id can be npc=12345 domain=legion
     url = URI.parse("http://www.wowhead.com/#{id}")
     doc = Nokogiri::HTML(open(url))
     sleep 0.25

@@ -20,8 +20,8 @@ module QuestCom
     result.squeeze(" ")
   end
 
-  def analyze_quest_matches(parsed_array)
-    names = parsed_array[1]
+  def find_quest_matches(parsed_array)
+    names = parsed_array[1] # ex => ["Fragrant Dreamleaf (Item)", "Fragrant Dreamleaf (Quest)", "Fragrant Dreamleaf (Object)"]
     potential_matches = names.select {|name| name.include? "(Quest)"}
 
     if potential_matches.length == 1
@@ -66,5 +66,16 @@ module QuestCom
   #   sorted = comments.sort_by {|comment| [-comment.rating, comment.date]}
   #   quest_obj.all_comments = sorted
   # end
+
+  def analyze(*args)
+    # args => ["request", data_to_use]
+    if args.include?("quest_matches")
+      find_quest_matches(args[1])
+    elsif args.include?("find_comments")
+      match_comments_variable(args[1])
+    elsif args.include?("get_json")
+      tidy_for_json(args[1])
+    end
+  end
 
 end
