@@ -1,14 +1,12 @@
 class CLI
-  # include QuestCom
-  extend QuestCom
+
+  include QuestCom
 
   def self.start
     greet_user
     input = Readline.readline
-    # binding.pry
-    quest = Scraper.new.from_input_to_quest(input)
-    quest.handle.show_top #####
-    # quest.initial_menu
+    quest = from_input_to_quest(input)
+    quest.show_top
   end
 
   def self.greet_user
@@ -53,6 +51,28 @@ class CLI
     exit
   end
 
+  def self.menu(*args)
+    # args => [options, optional_data]
+    sleep 1
+    puts "\n* * * Please select from the following: * * *\n\n"
+    args[0].each do |opt|
+      case opt
+      when "I"
+        puts "I = see more Information about this comment"
+      when "L"
+        puts "L = see a List of all comments"
+      when "N"
+        puts "N = search for a New quest's top comment"
+      when "C"
+        puts "OR enter the number of any comment from the numbered list to see its full text, #{args[1].length}"
+      when "E"
+        puts "E = Exit"
+      end
+    end
+    input = Readline.readline
+    users_choice(input)
+  end
+
   def self.assemble_list(comments)
     load_msg
     sleep 1
@@ -70,4 +90,8 @@ class CLI
     puts "\nThis comment was posted by #{comment.user} on #{comment.date} - rating: #{comment.rating}"
   end
 
+  def self.top(body)
+    puts "The top comment for this quest is:\n\n"
+    puts "#{body}"
+  end
 end

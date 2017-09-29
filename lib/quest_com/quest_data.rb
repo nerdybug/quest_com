@@ -10,7 +10,7 @@ class QuestData
   def create_and_save_comments(comment_hash_array) # array_of_hashes
     @all_comments = []
     comment_hash_array.each do |hash|
-      self.all_comments << QuestCom::Comment.new(hash)
+      @all_comments << QuestCom::Comment.new(hash)
     end
     order_comments
   end
@@ -19,23 +19,23 @@ class QuestData
     self.handler # => QuestCom::Handler object with the QuestData stored
   end
 
+  def get_comments
+    @all_comments
+  end
+
   def order_comments
-    sorted = self.all_comments.sort_by {|comment| [-comment.rating, comment.date]}
+    sorted = get_comments.sort_by {|comment| [-comment.rating, comment.date]}
     self.all_comments = sorted
     # => array of Comment objects sorted by highest rating then lowest date
   end
 
-  # def assemble_list
-  #   CLI.load_msg
-  #   sleep 1
-  #   counter = 1
-  #   puts "List of all comments:\n\n"
-  #   comments.collect do |comment|
-  #     # counter += 1
-  #     puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
-  #     # => 1. Quest located at the west shore of Val'sharah... posted on 2016-09-18
-  #     counter += 1
-  #   end
-  # end
+  def show_top
+    top = get_comments[0]
+    top.current = TRUE
+    body = top.clean_body
+    CLI.top(body)
+    # options: Info, List, New, Exit
+    CLI.menu(["I", "L", "N", "E"], get_comments)
+  end
 
 end

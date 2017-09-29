@@ -78,4 +78,13 @@ module QuestCom
     end
   end
 
+  def from_input_to_quest(input)
+    prepared_input = prepare_input(input) # module method
+    CLI.load_msg
+    result = Scraper.search_for_result_body(prepared_input)
+    quest_id = Scraper.parse_quest_id(result)
+    sleep 3
+    comment_hash_array = Scraper.find_comments_on_quest_page(quest_id)
+    QuestData.new(comment_hash_array)
+  end
 end

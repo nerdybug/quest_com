@@ -36,18 +36,18 @@ class QuestCom::Handler
     selected.clean_body
     puts "#{selected.body}"
     # options: Info, List, New, Exit, Choose number
-    menu(["I", "L", "N", "E", "C"])
+    CLI.menu(["I", "L", "N", "E", "C"])
   end
 
-  def show_top
-    top = comments[0]
-    top.current = TRUE
-    top.clean_body
-    puts "The top comment for this quest is:\n\n"
-    puts "#{top.body}"
-    # options: Info, List, New, Exit
-    menu(["I", "L", "N", "E"])
-  end
+  # def show_top
+  #   top = comments[0]
+  #   top.current = TRUE
+  #   top.clean_body
+  #   puts "The top comment for this quest is:\n\n"
+  #   puts "#{top.body}"
+  #   # options: Info, List, New, Exit
+  #   menu(["I", "L", "N", "E"])
+  # end
 
   def info
     current_comment = find_current_comment
@@ -56,10 +56,10 @@ class QuestCom::Handler
     if current_comment == comments[0]
       # different options needed when viewing the highest rated comment
       # options: List, New, Exit
-      menu(["L", "N", "E"])
+      CLI.menu(["L", "N", "E"])
     else
       # options: List, New, Exit, Choose number
-      menu(["L", "N", "E", "C"])
+      CLI.menu(["L", "N", "E", "C"])
     end
   end
 
@@ -110,7 +110,7 @@ class QuestCom::Handler
     when "l"
       CLI.assemble_list(comments)
       # options: New, Exit, Choose number
-      menu(["N", "E", "C"])
+      CLI.menu(["N", "E", "C"])
     when "n"
       CLI.start
     when "e"
@@ -119,105 +119,13 @@ class QuestCom::Handler
       binding.pry
       try_again
       # options: Info, List, New, Exit
-      menu(["I", "L", "N", "E"])
+      CLI.menu(["I", "L", "N", "E"])
     end
   end
 
   def try_again
     puts "* * * Invalid selection. * * *"
   end
-
-  # def self.goodbye
-  #   puts "* * * Thank you and goodbye. * * *"
-  #   sleep 1
-  #   exit
-  # end
-
-
-  # def self.load_msg
-  #   puts "* * * Loading...please wait. * * *\n\n"
-  # end
-
-  # def self.greet_user
-  #   puts "* * * Type in the exact quest name and hit Enter to see its top comment from wowhead - or type exit to leave * * *"
-  # end
-
-  # def self.prepare_input(input)
-  #   result = input.downcase
-  #   if result == "exit"
-  #     goodbye
-  #   end
-  #   remove_regex = /\b(and|of|the|with)\b|[!?.,-_=;:&\(\)\[\]]/
-  #   result.gsub!(remove_regex, '')
-  #   result.squeeze(" ")
-  # end
-
-  # def self.analyze_matches(parsed_array, names, potential_matches)
-  #   # potential_matches ex: ["Coastal Gloom (Quest)"] or ["Candy Bucket (Quest)", "Candy Bucket (Quest)", "Candy Bucket (Quest)", "Candy Bucket (Quest)"]
-  #   if potential_matches.length == 1
-  #     find_my_id = names.index("#{potential_matches[0]}").to_i
-  #     quest_id = parsed_array[7][find_my_id][1] # per structure of server response
-  #     quest_id # => 43738
-  #   elsif potential_matches.length > 1
-  #     too_many_matches
-  #   else
-  #     no_matches
-  #   end
-  # end
-
-  # def self.too_many_matches
-  #   puts "There are too many matches - please narrow your search at http://www.wowhead.com"
-  #   sleep 1
-  #   new_or_exit
-  # end
-
-  # def self.no_matches
-  #   puts "There is no match - please try your query at http://www.wowhead.com" # temporary message
-  #   sleep 1
-  #   new_or_exit
-  # end
-
-  # def self.no_comments
-  #   puts "This quest has no comments."
-  #   new_or_exit
-  # end
-
-  # def self.new_or_exit
-  #   puts "\nWould you like to search again? Y/N"
-  #   input = Readline.readline
-  #   case input.downcase
-  #   when "y"
-  #     CLI.new.call
-  #   when "n"
-  #     goodbye
-  #   end
-  # end
-
-  # def self.match_comments_variable(result_body)
-  #   # comment data lives in var lv_comments0
-  #   match = /var\s+lv_comments0\s+=\s+(\[.+\]);/.match(result_body)
-  #   # the info at index 1 of the match has all the comment data by itself as javascript, nil = no comments
-  #   if match == nil
-  #     no_comments
-  #   else
-  #     match[1]
-  #   end
-  # end
-
-  # def self.tidy_for_json(javascript)
-  #   # remove key/values that do not matter for the purpose of this program
-  #   javascript.gsub!(/\b(replies|lastEdit):(\[.*?\])/, '')
-  #   javascript.gsub!(/(\bcommentv2|number|id|nreplies|sticky|indent|roles|deleted|outofdate):.*?,/, '')
-  #   javascript.gsub!(/\b,userRating:\d+,+/, '')
-  #   # locate unescaped double quotes to properly escape
-  #   javascript.gsub!(/(?<!\\)(?:\\{2})*\K"/, '\"')
-  #   # the user, body and date values are surrounded with single quotes that need to be double
-  #   user_body_date_regex = /\b(?<key>user|body|date):(?<startQuote>')(?<value>(?:[^']|(?<=\\)')+)(?<endQuote>')/
-  #   javascript.gsub!(user_body_date_regex, '\k<key>:"\k<value>"')
-  #   # find each key and surround it with double quotes to make json parser happy
-  #   javascript.gsub!(/(?<=[{,])([\w]+):/, '"\1":')
-  #   javascript
-  # end
 
   def self.snip(body)
     raw_snip = body.split(" ").first(30).join(" ")
@@ -250,8 +158,8 @@ class QuestCom::Handler
 
   def self.replace_names(ids, body)
     # ids ex: npc=12345, quest=23456
-    scrape = Scraper.new
-    ids.each {|id| body.gsub!(/\[\b#{id}\]/, "#{scrape.find_name(id)}")}
+    # scrape = Scraper.new
+    ids.each {|id| body.gsub!(/\[\b#{id}\]/, "#{Scraper.find_name(id)}")}
     body
   end
 
