@@ -1,22 +1,17 @@
 class QuestData
-  attr_accessor :all_comments, :handler
+  attr_accessor :all_comments
   include QuestCom
 
-  def initialize(comment_hash_array)
-    create_and_save_comments(comment_hash_array)
-    @handler = QuestCom::Handler.new(self)
+  def initialize(array_of_hashes)
+    create_and_save_comments(array_of_hashes)
   end
 
-  def create_and_save_comments(comment_hash_array) # array_of_hashes
+  def create_and_save_comments(array_of_hashes)
     @all_comments = []
-    comment_hash_array.each do |hash|
+    array_of_hashes.each do |hash|
       @all_comments << QuestCom::Comment.new(hash)
     end
     order_comments
-  end
-
-  def handle
-    self.handler # => QuestCom::Handler object with the QuestData stored
   end
 
   def get_comments
@@ -36,6 +31,55 @@ class QuestData
     CLI.top(body)
     # options: Info, List, New, Exit
     CLI.menu(["I", "L", "N", "E"], get_comments)
+    user_picks(CLI.get_input)
+  end
+
+  def show_selected(input)
+    CLI.load_msg
+    index = input.to_i - 1
+    selected = get_comments[index]
+    clear_current_comment # => sets current attr to FALSE for all comments
+    selected.current = TRUE
+    selected.clean_body
+    puts "#{selected.body}"
+    # options: Info, List, New, Exit, Choose number
+    CLI.menu(["I", "L", "N", "E", "C"], get_comments)
+    user_picks(CLI.get_input)
+  end
+
+  def list_comments
+    CLI.load_msg
+    CLI.assemble_list(get_comments)
+  end
+
+  def clear_current_comment
+    get_comments.each {|comment| comment.current = FALSE}
+  end
+
+  def user_picks(input)
+    # when input is a number, not 0
+    if input.to_i != 0
+      show_selected(input)
+    end
+    # when input is a letter
+    case input.downcase
+    when "i"
+      info
+    when "l"
+      list_comments
+      # options: New, Exit, Choose number
+      CLI.menu(["N", "E", "C"], get_comments)
+      user_picks(CLI.get_input)
+    when "n"
+      CLI.start
+    when "e"
+      CLI.goodbye
+    else
+      CLI.try_again
+      # options: Info, List, New, Exit
+      CLI.menu(["I", "L", "N", "E"])
+      user_picks(CLI.get_input)
+    end
   end
 
 end

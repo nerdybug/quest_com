@@ -31,7 +31,7 @@ class Scraper
     result_body = hit_this_url(url)
     javascript = analyze("find_comments", result_body) # module method
     parsable_json = analyze("get_json", javascript) # module method
-    comment_hash_array = JSON.parse(parsable_json) # => array of hashes in tidy JSON
+    array_of_hashes = JSON.parse(parsable_json) # => array of hashes in tidy JSON
   end
 
   def self.find_name(id)

@@ -4,9 +4,13 @@ class CLI
 
   def self.start
     greet_user
-    input = Readline.readline
+    input = get_input
     quest = from_input_to_quest(input)
     quest.show_top
+  end
+
+  def self.get_input
+    Readline.readline
   end
 
   def self.greet_user
@@ -19,7 +23,7 @@ class CLI
 
   def self.new_or_exit
     puts "\nWould you like to search again? Y/N"
-    input = Readline.readline
+    input = get_input
     case input.downcase
     when "y"
       start
@@ -35,7 +39,7 @@ class CLI
   end
 
   def self.no_matches
-    puts "There is no match - please try your query at http://www.wowhead.com" # temporary message
+    puts "There is no match - please try your query at http://www.wowhead.com"
     sleep 1
     new_or_exit
   end
@@ -69,17 +73,13 @@ class CLI
         puts "E = Exit"
       end
     end
-    input = Readline.readline
-    users_choice(input)
   end
 
   def self.assemble_list(comments)
-    load_msg
     sleep 1
     counter = 1
     puts "List of all comments:\n\n"
     comments.collect do |comment|
-      # counter += 1
       puts "#{counter}. #{comment.snippet.strip}... posted on #{comment.date}"
       # => 1. Quest located at the west shore of Val'sharah... posted on 2016-09-18
       counter += 1
@@ -94,4 +94,9 @@ class CLI
     puts "The top comment for this quest is:\n\n"
     puts "#{body}"
   end
+
+  def self.try_again
+    puts "* * * Invalid selection. * * *"
+  end
+
 end

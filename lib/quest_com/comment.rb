@@ -7,16 +7,16 @@ class QuestCom::Comment
   end
 
   def fix_date
-    self.date = QuestCom::Handler.shorten(self.date)
+    self.date = analyze("fix_date", self.date) # module method
     # => QuestCom::Comment.date = "2013-08-29"
   end
 
   def clean_body
-    self.body = QuestCom::Handler.clean(self.body)
+    self.body = analyze("clean_up", self.body) # module method
   end
 
   def snippet
-    QuestCom::Handler.snip(self.body)
+    analyze("get_snippet", self.body) # module method
   end
 
   def show_info

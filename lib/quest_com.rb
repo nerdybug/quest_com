@@ -61,11 +61,57 @@ module QuestCom
     javascript
   end
 
-  # def order_comments(quest_obj) # arg: QuestData object
-  #   comments = quest_obj.all_comments
-  #   sorted = comments.sort_by {|comment| [-comment.rating, comment.date]}
-  #   quest_obj.all_comments = sorted
-  # end
+  def get_snip(text)
+    raw_snip = text.split(" ").first(30).join(" ")
+    clean_snip = clean(raw_snip)
+    clean_snip.split(/\s+/, 9)[0...8].join(' ')
+  end
+
+  def clean(text)
+    array = ["npc", "quest", "item", "zone", "spell", "achievement"]
+    text = mass_replace(array, text)
+    # remove map link, keep coordinates
+    replace_map_link = /\[\burl=.*?#map\]\[b\](?<coords>.*?)\[\/b\]\[\/url\]/
+    text.gsub!(replace_map_link, 'Coordinates: \k<coords>')
+    # remove link tags, keep actual link
+    text.gsub!(/(\[url=)(.*?)(\].*?\[\/url\])/, '\2')
+    # remove b, u, i, ul, li tags
+    text.gsub!(/\[(b|u|i|ul|li)\]|\[(\/b|\/u|\/i|\/li|\/ul)\]/, '')
+    # replace tables
+    text.gsub!(/\[table.*?\[\/table\]/m, '(* * * detailed table best viewed on http://www.wowhead.com * * *)') # temporary
+    # remove hr tags
+    text.gsub!(/\[hr\]/, '')
+    # replace quote tags
+    text.gsub!(/(\[quote\]|\[\/quote\])/, '"')
+    # replace spoiler tag
+    text.gsub!(/\[spoiler\]/, 'SPOILER>>>')
+    text.gsub!(/\[\/spoiler\]/, '<<<SPOILER')
+    text
+  end
+
+  def mass_replace(array, text)
+    # array ex: ["quest", "npc", "item", "zone"]
+    array.each {|id| find_and_replace("#{id}", text)}
+    text
+  end
+
+  def find_and_replace(id, text)
+    # id ex: npc, quest
+    ids = text.scan(/(?<=\[)#{id}=\d+.*?(?=\])/)
+    # ids ex: npc=12345, quest=23456
+    text = replace_names(ids, text)
+  end
+
+  def replace_names(ids, text)
+    # ids ex: npc=12345, quest=23456
+    ids.each {|id| text.gsub!(/\[\b#{id}\]/, "#{Scraper.find_name(id)}")}
+    text
+  end
+
+  def shorten(date)
+    date.gsub!(/T(.*)/, "")
+    date
+  end
 
   def analyze(*args)
     # args => ["request", data_to_use]
@@ -75,6 +121,12 @@ module QuestCom
       match_comments_variable(args[1])
     elsif args.include?("get_json")
       tidy_for_json(args[1])
+    elsif args.include?("get_snippet")
+      get_snip(args[1])
+    elsif args.include?("clean_up")
+      clean(args[1])
+    elsif args.include?("fix_date")
+      shorten(args[1])
     end
   end
 
@@ -84,7 +136,7 @@ module QuestCom
     result = Scraper.search_for_result_body(prepared_input)
     quest_id = Scraper.parse_quest_id(result)
     sleep 3
-    comment_hash_array = Scraper.find_comments_on_quest_page(quest_id)
-    QuestData.new(comment_hash_array)
+    array_of_hashes = Scraper.find_comments_on_quest_page(quest_id)
+    QuestData.new(array_of_hashes)
   end
 end
