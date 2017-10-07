@@ -56,6 +56,27 @@ class QuestData
     get_comments.each {|comment| comment.current = FALSE}
   end
 
+  def find_current_comment
+    results = get_comments.select {|comment| comment.current == TRUE}
+    current = results[0]
+  end
+
+  def info
+    current_comment = find_current_comment
+    current_comment.show_info
+
+    if current_comment == get_comments[0]
+    # different options needed when viewing the highest rated comment
+    # options: List, New, Exit
+      CLI.menu(["L", "N", "E"])
+      user_picks(CLI.get_input)
+    else
+    # options: List, New, Exit, Choose number
+      CLI.menu(["L", "N", "E", "C"], get_comments)
+      user_picks(CLI.get_input)
+    end
+  end
+
   def user_picks(input)
     # when input is a number, not 0
     if input.to_i != 0

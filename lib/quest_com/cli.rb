@@ -1,6 +1,8 @@
+require 'readline'
+
 class CLI
 
-  include QuestCom
+  extend QuestCom
 
   def self.start
     greet_user
@@ -68,7 +70,7 @@ class CLI
       when "N"
         puts "N = search for a New quest's top comment"
       when "C"
-        puts "OR enter the number of any comment from the numbered list to see its full text, #{args[1].length}"
+        puts "OR enter the number of any comment from the numbered list to see its full text, 1 - #{args[1].length}"
       when "E"
         puts "E = Exit"
       end
