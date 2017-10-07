@@ -1,3 +1,0 @@
-class QuestCom::Handler
-
-end
