@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["'nerdybug@gmail.com'"]
 
   spec.summary       = "Quest_Com: Quest Comments"
-  spec.description   = "Fetches the top comment for a World of Warcraft quest on Wowhead.com, other comments optional"
+  spec.description   = "Fetch the highest-rated comment on a World of Warcraft quest from wowhead.com, other comments optional"
   spec.homepage      = "https://github.com/nerdybug/quest_com"
   spec.license       = "MIT"
 
