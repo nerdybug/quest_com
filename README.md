@@ -25,7 +25,7 @@ TODO: Write usage instructions here
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/'nerdybug-53928'/quest_com.
+Bug reports and pull requests are welcome on GitHub at https://github.com/nerdybug/quest_com.
 
 
 ## License
