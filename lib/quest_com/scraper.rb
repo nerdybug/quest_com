@@ -26,8 +26,8 @@ class Scraper
     # => quest_id to search with or prompts user if no matches or too many matches
   end
 
-  def self.find_comments_on_quest_page(quest_id)
-    url = URI.parse("http://www.wowhead.com/quest=#{quest_id}/")
+  def self.find_comments_on_quest_page(quest_id, title)
+    url = URI.parse("http://www.wowhead.com/quest=#{quest_id}/#{title}")
     result_body = hit_this_url(url)
     javascript = analyze("find_comments", result_body) # module method
     parsable_json = analyze("get_json", javascript) # module method
