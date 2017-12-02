@@ -10,12 +10,13 @@ module QuestCom
   # extend self
 
   def prepare_input(input)
-    result = input.downcase
+    string_input = input.join(' ')
+    result = string_input.downcase
     if result == "exit"
       CLI.goodbye
     end
-    remove_regex = /\b(and|of|the|with)\b|[!?.,-_=;:&\(\)\[\]]/
-    result.gsub!(remove_regex, '')
+    # remove_regex = /\b(and|of|the|with)\b|[!?.,-_=;:&\(\)\[\]]/
+    # result.gsub!(remove_regex, '')
     result.squeeze(" ")
   end
 
@@ -135,7 +136,8 @@ module QuestCom
     result = Scraper.search_for_result_body(prepared_input)
     quest_id = Scraper.parse_quest_id(result)
     sleep 3
-    array_of_hashes = Scraper.find_comments_on_quest_page(quest_id)
+    title = input.join('-')
+    array_of_hashes = Scraper.find_comments_on_quest_page(quest_id, title)
     QuestData.new(array_of_hashes)
   end
 end
