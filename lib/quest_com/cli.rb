@@ -5,8 +5,9 @@ class CLI
   extend QuestCom
 
   def self.start
-    greet_user
-    input = get_input
+    # greet_user
+    # input = get_input
+    input = ARGV
     quest = from_input_to_quest(input)
     quest.show_top
   end
