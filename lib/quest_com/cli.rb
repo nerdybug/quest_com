@@ -20,7 +20,7 @@ class CLI
     from_input_to_comment(input)
   end
 
-  def from_input_to_comment(input)
+  def self.from_input_to_comment(input)
     quest = from_input_to_quest(input)
     quest.show_top
   end
