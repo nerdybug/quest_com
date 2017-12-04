@@ -92,7 +92,7 @@ class QuestData
       CLI.menu(["N", "E", "C"], get_comments)
       user_picks(CLI.get_input)
     when "n"
-      CLI.start
+      CLI.new_search
     when "e"
       CLI.goodbye
     else
