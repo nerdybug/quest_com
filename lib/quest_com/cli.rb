@@ -5,8 +5,6 @@ class CLI
   extend QuestCom
 
   def self.start
-    # greet_user
-    # input = get_input
     input = ARGV
     if ARGV == []
       new_search
