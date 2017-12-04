@@ -53,6 +53,7 @@ class CLI
 
   def self.no_comments
     puts "This quest has no comments."
+    sleep 1
     new_or_exit
   end
 
