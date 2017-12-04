@@ -9,9 +9,18 @@ class CLI
     # input = get_input
     input = ARGV
     if ARGV == []
-      search_greeting
-      input = get_input
+      new_search
     end
+    from_input_to_comment(input)
+  end
+
+  def self.new_search
+    search_greeting
+    input = get_input
+    from_input_to_comment(input)
+  end
+
+  def from_input_to_comment(input)
     quest = from_input_to_quest(input)
     quest.show_top
   end
@@ -33,7 +42,7 @@ class CLI
     input = get_input
     case input.downcase
     when "y"
-      start
+      new_search
     when "n"
       goodbye
     end
