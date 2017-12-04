@@ -10,7 +10,7 @@ class CLI
     input = ARGV
     if ARGV == []
       greet_user
-      intput = get_input
+      input = get_input
     end
     quest = from_input_to_quest(input)
     quest.show_top
