@@ -9,7 +9,7 @@ class CLI
     # input = get_input
     input = ARGV
     if ARGV == []
-      greet_user
+      search_greeting
       input = get_input
     end
     quest = from_input_to_quest(input)
@@ -20,7 +20,7 @@ class CLI
     Readline.readline
   end
 
-  def self.greet_user
+  def self.search_greeting
     puts "* * * Type in the exact quest name and hit Enter to see its top comment from wowhead - or type exit to leave * * *"
   end
 
