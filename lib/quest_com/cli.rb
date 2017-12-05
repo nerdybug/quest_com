@@ -53,7 +53,7 @@ class CLI
   end
 
   def self.no_matches
-    puts "There is no match - please try your query at http://www.wowhead.com"
+    puts "There is no match - please check your spelling or try your query at http://www.wowhead.com"
     sleep 1
     new_or_exit
   end
