@@ -1,4 +1,4 @@
-# QuestCom
+# Quest_Com
 
 Fetch the highest-rated comment on a World of Warcraft quest from wowhead.com - options include: see more information for the top comment, see a list of all comments, search for a new quest's top comment.
 
