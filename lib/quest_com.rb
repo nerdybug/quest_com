@@ -137,10 +137,9 @@ module QuestCom
     prepared_input = prepare_input(input) # module method
     CLI.load_msg
     result = Scraper.search_for_result_body(prepared_input)
-    quest_id = Scraper.parse_quest_id(result)
+    quest_id_and_title = Scraper.parse_quest_id_and_title(result)
     sleep 3
-    slug_title = prepared_input.gsub(' ', '-')
-    array_of_hashes = Scraper.find_comments_on_quest_page(quest_id, slug_title)
+    array_of_hashes = Scraper.find_comments_on_quest_page(quest_id_and_title)
     QuestData.new(array_of_hashes)
   end
 end
