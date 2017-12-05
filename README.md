@@ -20,13 +20,17 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To call this gem, simply type the name and hit enter:
 
+    $ quest_com
+
+Or include the name of the quest you wish to search for (using no punctuation) and hit enter:
+
+    $ quest_com quest name goes here
 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/nerdybug/quest_com.
-
 
 ## License
 
