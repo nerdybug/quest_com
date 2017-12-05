@@ -26,9 +26,11 @@ module QuestCom
     potential_matches = names.select {|name| name.include? "(Quest)"}
 
     if potential_matches.length == 1
-      find_my_id = names.index("#{potential_matches[0]}").to_i
-      quest_id = parsed_array[7][find_my_id][1] # per structure of server response
-      quest_id # => 43738
+      match_index = names.index("#{potential_matches[0]}").to_i
+      quest_id = parsed_array[7][match_index][1] # per structure of server response => 43738
+      quest_title = parsed_array[1][match_index]
+      slug_title = quest_title.gsub('(Quest)', '').strip.downcase.gsub(' ', '-').gsub(/[^\w-]/, '')
+      id_and_title = [quest_id, slug_title] # => [43738, "coastal-gloom"]
     elsif potential_matches.length > 1
       CLI.too_many_matches
     else
