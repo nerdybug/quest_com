@@ -7,7 +7,6 @@ require './lib/quest_com/comment'
 require 'pry'
 
 module QuestCom
-  # extend self
 
   def prepare_input(input)
     if input.is_a? Array
