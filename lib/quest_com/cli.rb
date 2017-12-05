@@ -28,7 +28,7 @@ class CLI
   end
 
   def self.search_greeting
-    puts "* * * Type in the exact quest name and hit Enter to see its top comment from wowhead - or type exit to leave * * *"
+    puts "* * * Type in the quest name (reminder: no punctuation) and hit enter or type exit to leave * * *"
   end
 
   def self.load_msg
