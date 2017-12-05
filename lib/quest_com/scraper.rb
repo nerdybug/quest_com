@@ -22,7 +22,7 @@ class Scraper
   def self.parse_quest_id_and_title(result_body)
     parsed_array = Array(eval(result_body))
     # => Array ["coastal gloom", ["Coastal Gloom (Quest)"], [], [], [], [], [], [[5, 43738,0]]]
-    analyze("quest_matches", parsed_array) # module method
+    find_quest_matches(parsed_array) # module method
     # => array with quest_id and slug_title to search with or prompts user if no matches or too many matches
   end
 
@@ -30,8 +30,8 @@ class Scraper
     # array with two pieces of data, [0] is the id, [1] is the title
     url = URI.parse("http://www.wowhead.com/quest=#{array[0]}/#{array[1]}")
     result_body = hit_this_url(url)
-    javascript = analyze("find_comments", result_body) # module method
-    parsable_json = analyze("get_json", javascript) # module method
+    javascript = match_comments_variable(result_body) # module method
+    parsable_json = tidy_for_json(javascript) # module method
     array_of_hashes = JSON.parse(parsable_json) # => array of hashes in tidy JSON
   end
 
