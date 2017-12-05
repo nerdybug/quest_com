@@ -116,23 +116,6 @@ module QuestCom
     date
   end
 
-  def analyze(*args)
-    # args => ["request", data_to_use]
-    if args.include?("quest_matches")
-      find_quest_matches(args[1])
-    elsif args.include?("find_comments")
-      match_comments_variable(args[1])
-    elsif args.include?("get_json")
-      tidy_for_json(args[1])
-    elsif args.include?("get_snippet")
-      get_snip(args[1])
-    elsif args.include?("clean_up")
-      clean(args[1])
-    elsif args.include?("fix_date")
-      shorten(args[1])
-    end
-  end
-
   def from_input_to_quest(input)
     prepared_input = prepare_input(input) # module method
     CLI.load_msg
