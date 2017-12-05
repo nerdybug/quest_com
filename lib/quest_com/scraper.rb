@@ -19,15 +19,16 @@ class Scraper
     result_body = hit_this_url(url) # => String ["coastal gloom", ["Coastal Gloom (Quest)"], [], [], [], [], [], [[5, 43738,0]]]
   end
 
-  def self.parse_quest_id(result_body)
+  def self.parse_quest_id_and_title(result_body)
     parsed_array = Array(eval(result_body))
     # => Array ["coastal gloom", ["Coastal Gloom (Quest)"], [], [], [], [], [], [[5, 43738,0]]]
     analyze("quest_matches", parsed_array) # module method
-    # => quest_id to search with or prompts user if no matches or too many matches
+    # => array with quest_id and slug_title to search with or prompts user if no matches or too many matches
   end
 
-  def self.find_comments_on_quest_page(quest_id, title)
-    url = URI.parse("http://www.wowhead.com/quest=#{quest_id}/#{title}")
+  def self.find_comments_on_quest_page(array)
+    # array with two pieces of data, [0] is the id, [1] is the title
+    url = URI.parse("http://www.wowhead.com/quest=#{array[0]}/#{array[1]}")
     result_body = hit_this_url(url)
     javascript = analyze("find_comments", result_body) # module method
     parsable_json = analyze("get_json", javascript) # module method
